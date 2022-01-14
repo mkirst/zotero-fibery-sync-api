@@ -23,6 +23,12 @@ describe(`integration app suite`, function () {
         assert.equal(name, `date.nager.at`);
     });
 
+    it(`should have datalist end-point`, async () => {
+        const {body: {name}} = await request(app).post(`/validate`)
+            .expect(200).expect(`Content-Type`, /json/);
+        assert.equal(name, `date.nager.at`);
+    });
+
     it(`should have synchronization config`, async () => {
         const {body: {types, filters}} = await request(app).post(`/api/v1/synchronizer/config`)
             .expect(200).expect(`Content-Type`, /json/);
