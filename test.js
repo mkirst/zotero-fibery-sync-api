@@ -50,5 +50,8 @@ describe(`integration app suite`, function () {
             }
         }).expect(200).expect(`Content-Type`, /json/);
         assert.equal(items.length > 0, true);
+        const holiday = items[0];
+        assert.equal(holiday.id.length > 0, true);
+        assert.equal(holiday.name.length > 0, true);
     });
 });

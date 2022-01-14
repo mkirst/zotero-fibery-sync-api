@@ -46,7 +46,8 @@ app.post(`/api/v1/synchronizer/schema`, (req, res) => {
 });
 
 app.post(`/api/v1/synchronizer/datalist`, wrap(async (req, res) => {
-    const items = (await (got(`https://date.nager.at/api/v3/AvailableCountries`).json())).map((row) => ({title: row.name, value: row.countryCode}));
+    const items = (await (got(`https://date.nager.at/api/v3/AvailableCountries`).json()))
+        .map((row) => ({title: row.name, value: row.countryCode}));
     res.json({items});
 }));
 
@@ -66,9 +67,9 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             const url = `https://date.nager.at/api/v3/PublicHolidays/${year}/${country}`;
             console.log(url);
             (await (got(url).json())).forEach((item) => {
-                    item.id = uuid(JSON.stringify(item));
-                    items.push(item);
-                });
+                item.id = uuid(JSON.stringify(item));
+                items.push(item);
+            });
         }
     }
     return res.json({items});
