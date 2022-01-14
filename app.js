@@ -10,13 +10,13 @@ const uuid = require(`uuid-by-string`);
 const got = require(`got`);
 
 const getYearRange = filter => {
-    const yearRange = [filter.from, filter.to];
+    const yearRange = [parseInt(filter.from), parseInt(filter.to)];
 
-    if (!_.isNumber(yearRange[0])) {
+    if (_.isNaN(yearRange[0])) {
         yearRange[0] = new Date().getFullYear() - 1;
     }
 
-    if (!_.isNumber(yearRange[1])) {
+    if (_.isNaN(yearRange[1])) {
         yearRange[1] = new Date().getFullYear();
     }
     return yearRange;
@@ -34,7 +34,7 @@ app.get(`/`, (req, res) => {
 });
 
 app.post(`/validate`, (req, res) => {
-    res.json({name: `date.nager.at`});
+    res.json({name: `Public Holidays`});
 });
 
 app.post(`/api/v1/synchronizer/config`, (req, res) => {

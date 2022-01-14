@@ -20,13 +20,7 @@ describe(`integration app suite`, function () {
     it(`should have validate end-point`, async () => {
         const {body: {name}} = await request(app).post(`/validate`)
             .expect(200).expect(`Content-Type`, /json/);
-        assert.equal(name, `date.nager.at`);
-    });
-
-    it(`should have datalist end-point`, async () => {
-        const {body: {name}} = await request(app).post(`/validate`)
-            .expect(200).expect(`Content-Type`, /json/);
-        assert.equal(name, `date.nager.at`);
+        assert.equal(name, `Public Holidays`);
     });
 
     it(`should have synchronization config`, async () => {

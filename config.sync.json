@@ -15,13 +15,13 @@
     },
     {
       "id": "from",
-      "type": "number",
+      "type": "text",
       "title": "Start Year (be default previous year used)",
       "optional": true
     },
     {
       "id": "to",
-      "type": "number",
+      "type": "text",
       "title": "End Year (be default current year used)",
       "optional": true
     }
