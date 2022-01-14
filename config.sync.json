@@ -1,0 +1,29 @@
+{
+  "types": [
+    {
+      "id": "holiday",
+      "name": "Public Holiday"
+    }
+  ],
+  "filters": [
+    {
+      "id": "countries",
+      "title": "Countries",
+      "datalist": true,
+      "optional": false,
+      "type": "multidropdown"
+    },
+    {
+      "id": "from",
+      "type": "number",
+      "title": "Start Year (be default previous year used)",
+      "optional": true
+    },
+    {
+      "id": "to",
+      "type": "number",
+      "title": "End Year (be default current year used)",
+      "optional": true
+    }
+  ]
+}

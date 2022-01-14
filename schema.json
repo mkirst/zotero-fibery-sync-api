@@ -1,0 +1,22 @@
+{
+  "schema": {
+    "holidays": {
+      "id": {
+        "name": "Id",
+        "type": "id"
+      },
+      "name": {
+        "name": "Name",
+        "type": "text"
+      },
+      "date": {
+        "name": "Date",
+        "type": "date"
+      },
+      "countryCode": {
+        "name": "Country Code",
+        "type": "text"
+      }
+    }
+  }
+}

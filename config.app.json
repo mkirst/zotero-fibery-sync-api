@@ -1,0 +1,11 @@
+{
+  "id": "holidays-app",
+  "name": "Public Holidays",
+  "version": "1.0.0",
+  "description": "Integrate data about public holidays into Fibery",
+  "authentication": [],
+  "sources": [],
+  "responsibleFor": {
+    "dataSynchronization": true
+  }
+}
