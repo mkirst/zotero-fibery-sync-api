@@ -37,14 +37,14 @@ describe(`integration app suite`, function () {
     });
 
     it(`should have schema holidays type defined`, async () => {
-        const {body: {schema: {holidays}}} = await request(app).post(`/api/v1/synchronizer/schema`)
-            .expect(200).expect(`Content-Type`, /json/);
-        assert.deepEqual(holidays.id, {name: `Id`, type: `id`});
+        const {body: {holiday}} = await request(app).post(`/api/v1/synchronizer/schema`)
+            .send().expect(200).expect(`Content-Type`, /json/);
+        assert.deepEqual(holiday.id, {name: `Id`, type: `id`});
     });
 
     it(`should return data for CY`, async () => {
         const {body: {items}} = await request(app).post(`/api/v1/synchronizer/data`).send({
-            requestedType: `holidays`,
+            requestedType: `holiday`,
             filter: {
                 countries: [`CY`]
             }

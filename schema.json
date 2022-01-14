@@ -1,6 +1,5 @@
 {
-  "schema": {
-    "holidays": {
+    "holiday": {
       "id": {
         "name": "Id",
         "type": "id"
@@ -18,5 +17,4 @@
         "type": "text"
       }
     }
-  }
 }

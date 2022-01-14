@@ -53,7 +53,7 @@ app.post(`/api/v1/synchronizer/datalist`, wrap(async (req, res) => {
 
 app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     const {requestedType, filter} = req.body;
-    if (requestedType !== `holidays`) {
+    if (requestedType !== `holiday`) {
         throw new Error(`Only holidays database can be synchronized`);
     }
     if (_.isEmpty(filter.countries)) {
