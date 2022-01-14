@@ -3,7 +3,13 @@
   "name": "Public Holidays",
   "version": "1.0.0",
   "description": "Integrate data about public holidays into Fibery",
-  "authentication": [],
+  "authentication": [
+    {
+      "id": "none",
+      "name": "This information is public",
+      "description": "There is no any authentication required. Just press [Connect] button and proceed to charts beauty"
+    }
+  ],
   "sources": [],
   "responsibleFor": {
     "dataSynchronization": true

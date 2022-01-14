@@ -26,10 +26,15 @@ const app = express();
 app.use(logger(`dev`));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-app.use(express.static(path.join(__dirname, `resources`)));
+
+app.get(`/logo`, (req, res) => res.sendFile(path.resolve(__dirname, `logo.svg`)));
 
 app.get(`/`, (req, res) => {
     res.json(appConfig);
+});
+
+app.post(`/validate`, (req, res) => {
+    res.json({name: `date.nager.at`});
 });
 
 app.post(`/api/v1/synchronizer/config`, (req, res) => {

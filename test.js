@@ -4,7 +4,7 @@ const assert = require(`assert`);
 
 describe(`integration app suite`, function () {
     it(`should have the logo`, async () => {
-        await request(app).get(`/logo.svg`).expect(200).expect(`Content-Type`, /svg/);
+        await request(app).get(`/logo`).expect(200).expect(`Content-Type`, /svg/);
     });
 
     it(`should have app config`, async () => {
@@ -15,6 +15,12 @@ describe(`integration app suite`, function () {
         assert.equal(appConfig.version, `1.0.0`);
         assert.match(appConfig.description, /public holidays/);
         assert.equal(appConfig.responsibleFor.dataSynchronization, true);
+    });
+
+    it(`should have validate end-point`, async () => {
+        const {body: {name}} = await request(app).post(`/validate`)
+            .expect(200).expect(`Content-Type`, /json/);
+        assert.equal(name, `date.nager.at`);
     });
 
     it(`should have synchronization config`, async () => {
