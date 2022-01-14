@@ -2,6 +2,9 @@
   "name": "holidays-app",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
     "start": "node index.js",
     "start-pm2": "pm2 start -f --watch --name=\"holidays-app\" index.js",
