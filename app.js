@@ -10,14 +10,19 @@ const uuid = require(`uuid-by-string`);
 const got = require(`got`);
 
 const getYearRange = filter => {
-    const yearRange = [parseInt(filter.from), parseInt(filter.to)];
+    let fromYear = parseInt(filter.from);
+    let toYear = parseInt(filter.to);
 
-    if (_.isNaN(yearRange[0])) {
-        yearRange[0] = new Date().getFullYear() - 1;
+    if (_.isNaN(fromYear)) {
+        fromYear = new Date().getFullYear() - 1;
     }
-
-    if (_.isNaN(yearRange[1])) {
-        yearRange[1] = new Date().getFullYear();
+    if (toYear) {
+        toYear = new Date().getFullYear();
+    }
+    const yearRange = [];
+    while(fromYear <= toYear) {
+        yearRange.push(fromYear);
+        fromYear++;
     }
     return yearRange;
 };
@@ -63,8 +68,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     const yearRange = getYearRange(filter);
     const items = [];
     for (const country of countries) {
-        for (let i = 0; i < yearRange.length; i ++) {
-            const year = yearRange[i];
+        for (const year of yearRange) {
             const url = `https://date.nager.at/api/v3/PublicHolidays/${year}/${country}`;
             console.log(url);
             (await (got(url).json())).forEach((item) => {
