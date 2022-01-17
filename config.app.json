@@ -1,14 +1,22 @@
 {
   "id": "holidays-app",
   "name": "Public Holidays",
-  "version": "1.0.2",
+  "version": "1.0.1",
   "description": "Integrate data about public holidays into Fibery",
   "authentication": [
     {
       "id": "none",
       "name": "This information is public",
       "description": "There is no any authentication required. Just press [Connect] button and proceed to sync",
-      "fields": []
+      "fields": [
+        {
+          "type": "link",
+          "value": "https://date.nager.at",
+          "description": "Data from Nager.Date is used:",
+          "id": "key-link",
+          "name": "https://date.nager.at"
+        }
+      ]
     }
   ],
   "sources": [],
