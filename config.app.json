@@ -7,16 +7,7 @@
     {
       "id": "none",
       "name": "This information is public",
-      "description": "There is no any authentication required. Just press [Connect] button and proceed to sync",
-      "fields": [
-        {
-          "type": "link",
-          "value": "https://date.nager.at",
-          "description": "Data from Nager.Date is used:",
-          "id": "key-link",
-          "name": "https://date.nager.at"
-        }
-      ]
+      "description": "There is no any authentication required. Just press [Connect] button and proceed to sync"
     }
   ],
   "sources": [],
