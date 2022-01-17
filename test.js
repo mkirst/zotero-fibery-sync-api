@@ -1,6 +1,7 @@
 const request = require(`supertest`);
 const app = require(`./app`);
 const assert = require(`assert`);
+const _= require(`lodash`);
 
 describe(`integration app suite`, function () {
     it(`should have the logo`, async () => {
@@ -12,7 +13,6 @@ describe(`integration app suite`, function () {
             .expect(200).expect(`Content-Type`, /json/);
 
         assert.equal(appConfig.name, `Public Holidays`);
-        assert.equal(appConfig.version, `1.0.0`);
         assert.match(appConfig.description, /public holidays/);
         assert.equal(appConfig.responsibleFor.dataSynchronization, true);
     });
@@ -40,7 +40,7 @@ describe(`integration app suite`, function () {
         const {body: {items}} = await request(app).post(`/api/v1/synchronizer/data`).send({
             requestedType: `holiday`,
             filter: {
-                countries: [`CY`]
+                countries: [`CY`],
             }
         }).expect(200).expect(`Content-Type`, /json/);
         assert.equal(items.length > 0, true);
@@ -48,4 +48,19 @@ describe(`integration app suite`, function () {
         assert.equal(holiday.id.length > 0, true);
         assert.equal(holiday.name.length > 0, true);
     });
+
+    it(`should return data for BY and 2020 year only`, async () => {
+        const {body: {items}} = await request(app).post(`/api/v1/synchronizer/data`).send({
+            requestedType: `holiday`,
+            filter: {
+                countries: [`BY`],
+                from: 2020,
+                to: 2020
+            }
+        }).expect(200).expect(`Content-Type`, /json/);
+        assert.equal(items.length > 0, true);
+        const holidaysOtherThan2020 = _.filter(items, (i) => new Date(i.date).getFullYear() !== 2020);
+        assert.equal(holidaysOtherThan2020.length > 0, false);
+    });
+
 });

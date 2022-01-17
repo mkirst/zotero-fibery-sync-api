@@ -16,7 +16,7 @@ const getYearRange = filter => {
     if (_.isNaN(fromYear)) {
         fromYear = new Date().getFullYear() - 1;
     }
-    if (toYear) {
+    if (_.isNaN(toYear)) {
         toYear = new Date().getFullYear();
     }
     const yearRange = [];
