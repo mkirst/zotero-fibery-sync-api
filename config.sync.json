@@ -16,13 +16,13 @@
     {
       "id": "from",
       "type": "number",
-      "title": "Start Year (be default previous year used)",
+      "title": "Start Year (by default previous year used)",
       "optional": true
     },
     {
       "id": "to",
       "type": "number",
-      "title": "End Year (be default current year used)",
+      "title": "End Year (by default current year used)",
       "optional": true
     }
   ]
