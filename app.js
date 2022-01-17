@@ -63,7 +63,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     const yearRange = getYearRange(filter);
     const items = [];
     for (const country of countries) {
-        for (const year of yearRange) {
+        for (let i = 0; i < yearRange.length; i ++) {
+            const year = yearRange[i];
             const url = `https://date.nager.at/api/v3/PublicHolidays/${year}/${country}`;
             console.log(url);
             (await (got(url).json())).forEach((item) => {
