@@ -1,7 +1,6 @@
 const express = require(`express`);
 const path = require(`path`);
 const logger = require(`morgan`);
-const appConfig = require(`./config.app.json`);
 const syncConfig = require(`./config.sync.json`);
 const schema = require(`./schema.json`);
 const wrap = require(`express-async-wrap`);
@@ -34,6 +33,7 @@ app.use(express.urlencoded({extended: false}));
 
 app.get(`/logo`, (req, res) => res.sendFile(path.resolve(__dirname, `logo.svg`)));
 
+const appConfig = require(`./config.app.json`);
 app.get(`/`, (req, res) => {
     res.json(appConfig);
 });
