@@ -7,7 +7,7 @@
     {
       "id": "none",
       "name": "This information is public",
-      "description": "There is no any authentication required. Just press [Connect] button and proceed to sync"
+      "description": "There is no any authentication required"
     }
   ],
   "sources": [],

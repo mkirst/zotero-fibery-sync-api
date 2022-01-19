@@ -39,7 +39,7 @@ app.get(`/`, (req, res) => {
 });
 
 app.post(`/validate`, (req, res) => {
-    res.json({name: `Public Holidays`});
+    res.json({name: `Public`});
 });
 
 app.post(`/api/v1/synchronizer/config`, (req, res) => {
