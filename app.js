@@ -43,8 +43,8 @@ const schema = require(`./schema.json`);
 app.post(`/api/v1/synchronizer/schema`, (req, res) => res.json(schema));
 
 app.post(`/api/v1/synchronizer/datalist`, wrap(async (req, res) => {
-    const items = (await (got(`https://date.nager.at/api/v3/AvailableCountries`).json()))
-        .map((row) => ({title: row.name, value: row.countryCode}));
+    const countries = await (got(`https://date.nager.at/api/v3/AvailableCountries`).json());
+    const items = countries.map((row) => ({title: row.name, value: row.countryCode}));
     res.json({items});
 }));
 
