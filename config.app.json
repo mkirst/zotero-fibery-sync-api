@@ -5,9 +5,10 @@
   "description": "Integrate data about public holidays into Fibery",
   "authentication": [
     {
-      "id": "none",
-      "name": "This information is public",
-      "description": "There is no any authentication required"
+      "id": "public",
+      "name": "Public Access",
+      "description": "There is no any authentication required",
+      "fields": []
     }
   ],
   "sources": [],

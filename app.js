@@ -1,8 +1,6 @@
 const express = require(`express`);
 const path = require(`path`);
 const logger = require(`morgan`);
-const syncConfig = require(`./config.sync.json`);
-const schema = require(`./schema.json`);
 const wrap = require(`express-async-wrap`);
 const _ = require(`lodash`);
 const uuid = require(`uuid-by-string`);
@@ -34,21 +32,15 @@ app.use(express.urlencoded({extended: false}));
 app.get(`/logo`, (req, res) => res.sendFile(path.resolve(__dirname, `logo.svg`)));
 
 const appConfig = require(`./config.app.json`);
-app.get(`/`, (req, res) => {
-    res.json(appConfig);
-});
+app.get(`/`, (req, res) => res.json(appConfig));
 
-app.post(`/validate`, (req, res) => {
-    res.json({name: `Public`});
-});
+app.post(`/validate`, (req, res) => res.json({name: `Public`}));
 
-app.post(`/api/v1/synchronizer/config`, (req, res) => {
-    res.json(syncConfig);
-});
+const syncConfig = require(`./config.sync.json`);
+app.post(`/api/v1/synchronizer/config`, (req, res) => res.json(syncConfig));
 
-app.post(`/api/v1/synchronizer/schema`, (req, res) => {
-    res.json(schema);
-});
+const schema = require(`./schema.json`);
+app.post(`/api/v1/synchronizer/schema`, (req, res) => res.json(schema));
 
 app.post(`/api/v1/synchronizer/datalist`, wrap(async (req, res) => {
     const items = (await (got(`https://date.nager.at/api/v3/AvailableCountries`).json()))
