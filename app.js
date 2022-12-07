@@ -41,10 +41,12 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             items.push(data);
         });
 
+        response.hea
+
         return res.json({items});
 
     } else if (requestedType == `author`) {
-        const items = [];
+        const items = {};
         const url = `https://api.zotero.org/groups/2836051/items/top`;
         (await (got(url).json())).forEach((item) => {
             for (a of item.data.creators) {
@@ -52,9 +54,16 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 if (author.creatorType != "author") {
                     continue;
                 }
-                author.name = author.firstName + author.lastName;
+                author.firstName = author.firstName.split(" ")[0];
+                author.name = author.firstName + " " + author.lastName;
                 author.id = uuid(JSON.stringify(author));
-                items.push(author);
+                if (author.name in items) {
+                    items[author.name].works.push(uuid(JSON.stringify(data)));
+                } else {
+                    items[author.name] = author;
+                    items[author.name].works = [uuid(JSON.stringify(data))];
+                }
+                
             }
 
         });
