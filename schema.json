@@ -15,7 +15,7 @@
       "link": {
         "name": "Zotero Link",
         "type": "text",
-        "subtype": "url"
+        "subType": "url"
       },
       "key": {
         "name": "Zotero Key",
