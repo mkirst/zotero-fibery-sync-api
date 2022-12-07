@@ -41,7 +41,6 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             items.push(data);
         });
 
-        response.hea
 
         return res.json({items});
 
