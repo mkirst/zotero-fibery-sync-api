@@ -29,7 +29,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
     if (requestedType == `literature`) {
         const items = [];
-        const url = `api.zotero.org/groups/2836051/items`;
+        const url = `https://api.zotero.org/groups/2836051/items`;
         (await (got(url).json())).forEach((item) => {
             data = item.data;
             data.id = uuid(JSON.stringify(data));
