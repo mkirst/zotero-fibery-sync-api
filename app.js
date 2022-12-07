@@ -34,7 +34,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         
         response.forEach((item) => {
             data = item.data;
-            data.id = uuid(JSON.stringify(data));
+            data.id = uuid(JSON.stringify(item.key));
             data.name = data.title;
             data.link = item.links.alternate.href;
             data.key = item.key;
@@ -55,12 +55,12 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 }
                 author.firstName = author.firstName.split(" ")[0];
                 author.name = author.firstName + " " + author.lastName;
-                author.id = uuid(JSON.stringify(author));
+                author.id = uuid(JSON.stringify(author.name));
                 if (author.name in items) {
-                    // items[author.name].literatureId.push(uuid(JSON.stringify(item.data)));
+                    items[author.name].literatureId.push(uuid(JSON.stringify(item.key)));
                 } else {
                     items[author.name] = author;
-                    items[author.name].literatureId = uuid(JSON.stringify(item.data));
+                    items[author.name].literatureId = [uuid(JSON.stringify(item.key))];
                 }
                 
             }
