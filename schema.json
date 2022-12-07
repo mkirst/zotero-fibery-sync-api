@@ -4,7 +4,7 @@
         "name": "Id",
         "type": "id"
       },
-      "title": {
+      "name": {
         "name": "Name",
         "type": "text"
       },

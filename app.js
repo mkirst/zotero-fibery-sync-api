@@ -33,6 +33,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         (await (got(url).json())).forEach((item) => {
             data = item.data;
             data.id = uuid(JSON.stringify(data));
+            data.name = data.title;
             data.link = item.links.self.href;
             items.push(data);
         });
