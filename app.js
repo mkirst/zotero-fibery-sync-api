@@ -29,12 +29,13 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
     if (requestedType == `literature`) {
         const items = [];
-        const url = `https://api.zotero.org/groups/2836051/items`;
+        const url = `https://api.zotero.org/groups/2836051/items/top`;
         (await (got(url).json())).forEach((item) => {
             data = item.data;
             data.id = uuid(JSON.stringify(data));
             data.name = data.title;
-            data.link = item.links.self.href;
+            data.link = item.links.alternate.href;
+            data.key = item.key;
             items.push(data);
         });
 
@@ -49,6 +50,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 if (author.creatorType != "author") {
                     continue;
                 }
+                author.name = author.firstName + author.lastName;
                 author.id = uuid(JSON.stringify(author));
                 items.push(author);
             }

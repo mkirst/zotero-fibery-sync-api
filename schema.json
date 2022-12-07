@@ -16,12 +16,24 @@
         "name": "Zotero Link",
         "type": "text",
         "subtype": "url"
+      },
+      "key": {
+        "name": "Zotero Key",
+        "type": "text"
+      },
+      "version": {
+        "name": "Zotero Version",
+        "type": "text"
       }
     },
     "author" : {
       "id": {
         "name": "Id",
         "type": "id"
+      },
+      "name": {
+        "name": "Name",
+        "type": "text"
       },
       "firstName": {
         "name": "First Name",
