@@ -1,20 +1,46 @@
 {
-    "holiday": {
+    "literature": {
       "id": {
         "name": "Id",
         "type": "id"
       },
-      "name": {
+      "title": {
         "name": "Name",
         "type": "text"
       },
       "date": {
-        "name": "Date",
+        "name": "Publication Date",
         "type": "date"
       },
-      "countryCode": {
-        "name": "Country Code",
+      "link": {
+        "name": "Zotero Link",
+        "type": "text",
+        "subtype": "url"
+      }
+    },
+    "author" : {
+      "id": {
+        "name": "Id",
+        "type": "id"
+      },
+      "firstName": {
+        "name": "First Name",
         "type": "text"
+      },
+      "lastName": {
+        "name": "Last Name",
+        "type": "text"
+      },
+      "literatureId": {
+        "type": "text",
+        "name": "Literature Id",
+        "relation": {
+          "cardinality": "many-to-many",
+          "name": "Works",
+          "targetName": "Authors",
+          "targetType": "literature",
+          "targetFieldId": "id"
+        }
       }
     }
 }

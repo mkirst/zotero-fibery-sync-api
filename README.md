@@ -1,2 +1,1 @@
-### Public Holidays Integration App
-
+### Zotero Fibery integration app

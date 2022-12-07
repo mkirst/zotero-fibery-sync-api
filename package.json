@@ -1,6 +1,6 @@
 {
-  "name": "holidays-app",
-  "version": "1.0.1",
+  "name": "zotero-fibery-app",
+  "version": "0.1",
   "private": true,
   "engines": {
     "node": "16.x"

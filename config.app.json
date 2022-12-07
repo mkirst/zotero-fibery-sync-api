@@ -1,8 +1,8 @@
 {
-  "id": "holidays-app",
-  "name": "Public Holidays",
-  "version": "1.0.1",
-  "description": "Integrate data about public holidays into Fibery",
+  "id": "zotero-fibery-app",
+  "name": "Zotero",
+  "version": "0.1",
+  "description": "Integrate Zotero library into Fibery",
   "authentication": [
     {
       "id": "public",
