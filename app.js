@@ -57,10 +57,10 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 author.name = author.firstName + " " + author.lastName;
                 author.id = uuid(JSON.stringify(author));
                 if (author.name in items) {
-                    items[author.name].works.push(uuid(JSON.stringify(item.data)));
+                    items[author.name].literatureId.push(uuid(JSON.stringify(item.data)));
                 } else {
                     items[author.name] = author;
-                    items[author.name].works = [uuid(JSON.stringify(item.data))];
+                    items[author.name].literatureId = [uuid(JSON.stringify(item.data))];
                 }
                 
             }
