@@ -30,7 +30,9 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     if (requestedType == `literature`) {
         const items = [];
         const url = `https://api.zotero.org/groups/2836051/items/top`;
-        (await (got(url).json())).forEach((item) => {
+        response = await (got(url).json());
+        
+        response.forEach((item) => {
             data = item.data;
             data.id = uuid(JSON.stringify(data));
             data.name = data.title;
@@ -43,7 +45,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
     } else if (requestedType == `author`) {
         const items = [];
-        const url = `api.zotero.org/groups/2836051/items`;
+        const url = `https://api.zotero.org/groups/2836051/items`;
         (await (got(url).json())).forEach((item) => {
             for (i in item.creators) {
                 author = item.creators[i];
