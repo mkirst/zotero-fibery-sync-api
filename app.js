@@ -47,9 +47,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         const items = [];
         const url = `https://api.zotero.org/groups/2836051/items/top`;
         (await (got(url).json())).forEach((item) => {
-            for (i in item.creators) {
-                console.log(i, item.creators);
-                author = item.creators[i];
+            for (a of item.data.creators) {
+                author = a;
                 if (author.creatorType != "author") {
                     continue;
                 }
