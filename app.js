@@ -43,7 +43,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
         has_more = response.headers.link.split(",")[0].split(";")[1] == " rel=\"next\"";
         pagination = {"hasNext" : has_more};
-        return res.json([{items}, {pagination}]);
+        return res.json({items, pagination});
 
     } else if (requestedType == `author`) {
         const items = {};
