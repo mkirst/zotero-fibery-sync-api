@@ -36,8 +36,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     if (requestedType == `literature`) {
         const items = [];
         var url = `https://api.zotero.org/groups/2836051/items/top`;
-        if (pagination != null && pagination["nextPageConfig"] != null) {
-            url = pagination["nextPageConfig"]["link"];
+        if (pagination != null && pagination["link"] != null) {
+            url = pagination["link"];
         } else if (pagination == null) {
             pagination = {};
         }
