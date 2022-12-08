@@ -32,6 +32,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         var url = `https://api.zotero.org/groups/2836051/items/top`;
         if (pagination != null && pagination["nextPageConfig"] != null) {
             url = pagination["nextPageConfig"]["link"];
+        } else if (pagination == null) {
+            pagination = {};
         }
         response = await (got(url));
         
