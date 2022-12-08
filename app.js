@@ -34,7 +34,6 @@ app.post(`/api/v1/synchronizer/schema`, (req, res) => res.json(schema));
 app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     var {requestedType, pagination} = req.body;
 
-    const items = [];
     var url = `https://api.zotero.org/groups/2836051/items/top`;
     if (pagination != null && pagination["link"] != null) {
         url = pagination["link"];
@@ -43,6 +42,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     }
 
     if (requestedType == `literature`) {
+        var items = [];
         response = await (got(url));
         
         for (item of JSON.parse(response.body)) {
@@ -66,7 +66,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         return res.json({items, pagination});
 
     } else if (requestedType == `author`) {
-
+        var items = {};
         response = await (got(url));
 
         for (item of JSON.parse(response.body)) {
