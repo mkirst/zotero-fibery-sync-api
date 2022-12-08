@@ -9,5 +9,10 @@
       "name": "Author"
     }
   ],
-  "filters" : []
+  "filters" : [{
+    "id": "libraryid",
+    "title": "Library ID",
+    "optional": false,
+    "type": "text"
+  }]
 }

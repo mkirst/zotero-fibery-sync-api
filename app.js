@@ -32,9 +32,14 @@ const schema = require(`./schema.json`);
 app.post(`/api/v1/synchronizer/schema`, (req, res) => res.json(schema));
 
 app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
-    var {requestedType, pagination} = req.body;
+    var {requestedType, filter, pagination} = req.body;
+    
+    if (_.isEmpty(filter.libraryid)) {
+        throw new Error(`Library ID must be specified`);
+    }
+    const {libraryid} = filter;
 
-    var url = `https://api.zotero.org/groups/2836051/items/top`;
+    var url = `https://api.zotero.org/groups/${libraryid}/items/top`;
     if (pagination != null && pagination["link"] != null) {
         url = pagination["link"];
     } else if (pagination == null) {
