@@ -5,6 +5,7 @@ const wrap = require(`express-async-wrap`);
 const _ = require(`lodash`);
 const uuid = require(`uuid-by-string`);
 const got = require(`got`);
+var parse = require('parse-link-header');
 
 const app = express();
 app.use(logger(`dev`));
@@ -46,11 +47,15 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             items.push(data);
         };
 
-        has_more = response.headers.link.split(",")[0].split(";")[1] == " rel=\"next\"";
-        pagination["hasNext"] = has_more;
-        pagination["nextPageConfig"] =  {
-                "link": response.headers.link.split(";")[0].split(">")[0].split("<")[1]
+        var parsed = parse(response.headers.link);
+
+        pagination["hasNext"] = parsed["next"] != null;
+        if (pagination["hasNext"]) {
+            pagination["nextPageConfig"] =  {
+                "link": parsed["next"]["url"]
               };
+        }
+
         return res.json({items, pagination});
 
     } else if (requestedType == `author`) {

@@ -17,7 +17,8 @@
     "lodash": "^4.17.21",
     "morgan": "~1.9.0",
     "package.json": "^2.0.1",
-    "uuid-by-string": "^3.0.5"
+    "uuid-by-string": "^3.0.5",
+    "parse-link-header": "^2.0.0"
   },
   "devDependencies": {
     "mocha": "^5.1.1",
