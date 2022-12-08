@@ -12,6 +12,11 @@ app.use(logger(`dev`));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
+app.use(function (req, res, next) {
+    console.log("Request: ", req);
+    next();
+});
+
 app.get(`/logo`, (req, res) => res.sendFile(path.resolve(__dirname, `logo.svg`)));
 
 const appConfig = require(`./config.app.json`);
