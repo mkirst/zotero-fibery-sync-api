@@ -18,7 +18,7 @@ app.use(express.urlencoded({extended: false}));
 //     next();
 // });
 
-app.get(`/logo`, (req, res) => res.sendFile(path.resolve(__dirname, `logo.png`)));
+app.get(`/logo`, (req, res) => res.sendFile(path.resolve(__dirname, `logo.svg`)));
 
 const appConfig = require(`./config.app.json`);
 app.get(`/`, (req, res) => res.json(appConfig));
