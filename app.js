@@ -44,7 +44,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         has_more = response.headers.link.split(",")[0].split(";")[1] == " rel=\"next\"";
         pagination = {"hasNext" : has_more, 
             "nextPageConfig": {
-                "start_cursor": response.headers.link.split(",")[0].split("=")[1].split(">")[0];
+                "start_cursor": response.headers.link.split(",")[0].split("=")[1].split(">")[0]
               }
         };
         return res.json({items, pagination});
