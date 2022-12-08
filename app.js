@@ -12,10 +12,11 @@ app.use(logger(`dev`));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
-app.use(function (req, res, next) {
-    console.log("Request: ", req);
-    next();
-});
+// Uncomment to print out contents of requests
+// app.use(function (req, res, next) {
+//     console.log("Request: ", req);
+//     next();
+// });
 
 app.get(`/logo`, (req, res) => res.sendFile(path.resolve(__dirname, `logo.svg`)));
 
@@ -33,14 +34,15 @@ app.post(`/api/v1/synchronizer/schema`, (req, res) => res.json(schema));
 app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     var {requestedType, pagination} = req.body;
 
+    const items = [];
+    var url = `https://api.zotero.org/groups/2836051/items/top`;
+    if (pagination != null && pagination["link"] != null) {
+        url = pagination["link"];
+    } else if (pagination == null) {
+        pagination = {};
+    }
+
     if (requestedType == `literature`) {
-        const items = [];
-        var url = `https://api.zotero.org/groups/2836051/items/top`;
-        if (pagination != null && pagination["link"] != null) {
-            url = pagination["link"];
-        } else if (pagination == null) {
-            pagination = {};
-        }
         response = await (got(url));
         
         for (item of JSON.parse(response.body)) {
@@ -64,9 +66,10 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         return res.json({items, pagination});
 
     } else if (requestedType == `author`) {
-        const items = {};
-        const url = `https://api.zotero.org/groups/2836051/items/top`;
-        (await (got(url).json())).forEach((item) => {
+
+        response = await (got(url));
+
+        for (item of JSON.parse(response.body)) {
             for (a of item.data.creators) {
                 author = a;
                 if (author.creatorType != "author") {
@@ -84,9 +87,18 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 
             }
 
-        });
+        }
 
-        return res.json({items});
+        var parsed = parse(response.headers.link);
+
+        pagination["hasNext"] = parsed["next"] != null;
+        if (pagination["hasNext"]) {
+            pagination["nextPageConfig"] =  {
+                "link": parsed["next"]["url"]
+              };
+        }
+
+        return res.json({items, pagination});
     }
 
     throw new Error(`Only literature and author databases can be synchronized`);
