@@ -25,7 +25,7 @@ const schema = require(`./schema.json`);
 app.post(`/api/v1/synchronizer/schema`, (req, res) => res.json(schema));
 
 app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
-    const {requestedType, pagination} = req.body;
+    var {requestedType, pagination} = req.body;
 
     if (requestedType == `literature`) {
         const items = [];
