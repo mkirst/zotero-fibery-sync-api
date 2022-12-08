@@ -25,11 +25,14 @@ const schema = require(`./schema.json`);
 app.post(`/api/v1/synchronizer/schema`, (req, res) => res.json(schema));
 
 app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
-    const {requestedType, filter} = req.body;
+    const {requestedType, pagination} = req.body;
 
     if (requestedType == `literature`) {
         const items = [];
-        const url = `https://api.zotero.org/groups/2836051/items/top`;
+        var url = `https://api.zotero.org/groups/2836051/items/top`;
+        if (pagination["nextPageConfig"]) {
+            url = pagination["nextPageConfig"]["link"];
+        }
         response = await (got(url));
         
         for (item of JSON.parse(response.body)) {
@@ -42,11 +45,10 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         };
 
         has_more = response.headers.link.split(",")[0].split(";")[1] == " rel=\"next\"";
-        pagination = {"hasNext" : has_more, 
-            "nextPageConfig": {
-                "start_cursor": response.headers.link.split(",")[0].split("=")[1].split(">")[0]
-              }
-        };
+        pagination["hasNext"] = has_more;
+        pagination["nextPageConfig"] =  {
+                "link": response.headers.link.split(";")[0].split(">")[0].split("<")[1]
+              };
         return res.json({items, pagination});
 
     } else if (requestedType == `author`) {
