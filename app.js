@@ -32,7 +32,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         const url = `https://api.zotero.org/groups/2836051/items/top`;
         response = await (got(url));
         
-        for (item of response.body) {
+        for (item of JSON.parse(response.body)) {
             data = item.data;
             data.id = uuid(JSON.stringify(item.key));
             data.name = data.title;
