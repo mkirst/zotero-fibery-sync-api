@@ -63,7 +63,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     console.log(filename, req.body);
     var synchronizationType = "delta";
 
-    var url = `https://api.zotero.org/groups/${libraryid}/items/top?limit=25`;
+    var url = `https://api.zotero.org/groups/${libraryid}/items/top?limit=100`;
 
     if (pagination != null && pagination["link"] != null) {
         url = pagination["link"];
