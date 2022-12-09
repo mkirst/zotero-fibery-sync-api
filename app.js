@@ -45,7 +45,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
     const {libraryid} = filter;
     const filename = libraryid + "." + account + "." + requestedType + ".txt";
-
+    console.log(filename);
     var synchronizationType = "delta";
 
     var url = `https://api.zotero.org/groups/${libraryid}/items/top`;
@@ -57,6 +57,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         pagination = {};
         try {
             const version = fs.readFileSync(path.resolve(__dirname, filename), 'utf8');
+            console.log(version);
             url += `?since=${version}`;
           } catch (err) {
             console.error(err);
@@ -68,7 +69,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     var items = [];
     response = await (got(url));
         
-    if (requestedType != `literature`) {
+    if (requestedType == `literature`) {
         for (item of JSON.parse(response.body)) {
             data = item.data;
             data.id = uuid(JSON.stringify(item.key));
@@ -119,7 +120,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     }  else {
         // We've finished syncing this version
         // Let's record its number
-        fs.writeFile(path.resolve(__dirname, filename), response.headers["Last-Modified-Version"], err => {
+        fs.writeFile(path.resolve(__dirname, filename), response.headers["last-modified-version"], err => {
             if (err) {
                 console.error(err);
             }
