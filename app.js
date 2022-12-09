@@ -132,7 +132,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     pagination["hasNext"] = parsed["next"] != null;
     if (pagination["hasNext"]) {
         pagination["nextPageConfig"] =  {
-            "link": parsed["next"]["url"]
+            "link": parsed["next"]["url"],
+            "synchronizationType": synchronizationType
             };
     }  else {
         // We've finished syncing this version
