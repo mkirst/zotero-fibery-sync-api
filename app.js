@@ -44,7 +44,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     }
 
     const {libraryid} = filter;
-    const filename = libraryid + "." + account["token"] + "." + requestedType + ".txt";
+    const filename = libraryid + "." + account["owner"] + "." + requestedType + ".txt";
     console.log(filename);
     var synchronizationType = "delta";
 
@@ -72,7 +72,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     if (requestedType == `literature`) {
         for (item of JSON.parse(response.body)) {
             data = item.data;
-            data.bibtex = await got(`https://api.zotero.org/groups/${libraryid}/items/${item.key}?format=bibtex`).body;
+            data.bibtex = (await got(`https://api.zotero.org/groups/${libraryid}/items/${item.key}?format=bibtex`)).body;
             data.id = uuid(JSON.stringify(item.key));
             data.name = data.title;
             data.link = item.links.alternate.href;
