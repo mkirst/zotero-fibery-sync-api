@@ -19,7 +19,7 @@
     "package.json": "^0.0.0",
     "parse-link-header": "^2.0.0",
     "uuid-by-string": "^3.0.5",
-    "glob"
+    "glob":"8.0.3"
   },
   "devDependencies": {
     "mocha": "^10.1.0",
