@@ -61,7 +61,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     const {libraryid} = filter;
     const filename = libraryid + "." + account["owner"] + "." + requestedType + ".txt";
     console.log(filename, req.body);
-    var synchronizationType = "delta";
+    var synchronizationType = "full";
 
     var url = `https://api.zotero.org/groups/${libraryid}/items/top`;
 
@@ -75,7 +75,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             console.log(version);
             url += `?since=${version}`;
           } catch (err) {
-            console.error(err);
+            // console.error(err);
+            console.log("File does not exist");
             synchronizationType = "full";
           }
     }
@@ -136,6 +137,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     }  else {
         // We've finished syncing this version
         // Let's record its number
+        console.log("Finished with this type, writing last modified verison", response.headers["last-modified-version"])
         fs.writeFile(path.resolve(__dirname, filename), response.headers["last-modified-version"], err => {
             if (err) {
                 console.error(err);
