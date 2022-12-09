@@ -67,7 +67,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
     if (pagination != null && pagination["link"] != null) {
         url = pagination["link"];
-        synchronizationType = "delta";//pagination["synchronizationType"];
+        synchronizationType = pagination["synchronizationType"];
     } else if (pagination == null) {
         pagination = {};
         try {
@@ -77,7 +77,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
           } catch (err) {
             // console.error(err);
             console.log("File does not exist");
-            // synchronizationType = "full";
+            synchronizationType = "full";
           }
     }
 
@@ -88,7 +88,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     if (requestedType == `literature`) {
         for (item of JSON.parse(response.body)) {
             data = item.data;
-            // data.bibtex = (await got(`https://api.zotero.org/groups/${libraryid}/items/${item.key}?format=bibtex`)).body;
+            data.bibtex = (await got(`https://api.zotero.org/groups/${libraryid}/items/${item.key}?format=bibtex`)).body;
             data.id = uuid(JSON.stringify(item.key));
             data.name = data.title;
             data.link = item.links.alternate.href;
