@@ -67,7 +67,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
     if (pagination != null && pagination["link"] != null) {
         url = pagination["link"];
-        synchronizationType = pagination["synchronizationType"];
+        synchronizationType = "delta";//pagination["synchronizationType"];
     } else if (pagination == null) {
         pagination = {};
         try {
@@ -77,7 +77,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
           } catch (err) {
             // console.error(err);
             console.log("File does not exist");
-            synchronizationType = "full";
+            // synchronizationType = "full";
           }
     }
 
