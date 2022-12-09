@@ -25,10 +25,6 @@
         "name": "Zotero Version",
         "type": "text"
       },
-      "bibtex": {
-        "name": "bibtex",
-        "type": "text"
-      },
       "authorId": {
         "type": "array[text]",
         "name": "Author Id",
