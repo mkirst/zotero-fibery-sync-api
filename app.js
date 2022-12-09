@@ -61,7 +61,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     const {libraryid} = filter;
     const filename = libraryid + "." + account["owner"] + "." + requestedType + ".txt";
     console.log(filename, req.body);
-    var synchronizationType = "full";
+    var synchronizationType = "delta";
 
     var url = `https://api.zotero.org/groups/${libraryid}/items/top`;
 
@@ -83,7 +83,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
     var items = [];
     response = await (got(url));
-    console.log(response);
+    console.log(response.body);
         
     if (requestedType == `literature`) {
         for (item of JSON.parse(response.body)) {
@@ -145,7 +145,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             // file written successfully
             });
     }
-
+    console.log({items, pagination, synchronizationType});
     return res.json({items, pagination, synchronizationType});
     
 }));
