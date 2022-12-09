@@ -7,6 +7,7 @@ const uuid = require(`uuid-by-string`);
 const got = require(`got`);
 var parse = require('parse-link-header');
 const fs = require('fs');
+var glob = require("glob")
 
 const app = express();
 app.use(logger(`dev`));
@@ -25,6 +26,20 @@ const appConfig = require(`./config.app.json`);
 app.get(`/`, (req, res) => res.json(appConfig));
 
 app.post(`/validate`, (req, res) => res.json({name: `Public`}));
+
+app.post(`/api/v1/synchronizer/clearcache`, wrap(async (req, res) => {
+    glob("**/*.literature.txt", function (er, files) {
+        for (const file of files) {
+            fs.unlinkSync(file);
+        }
+    });
+    glob("**/*.author.txt", function (er, files) {
+        for (const file of files) {
+            fs.unlinkSync(file);
+        }
+    });
+
+}));
 
 const syncConfig = require(`./config.sync.json`);
 app.post(`/api/v1/synchronizer/config`, (req, res) => res.json(syncConfig));
