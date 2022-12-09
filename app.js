@@ -6,6 +6,7 @@ const _ = require(`lodash`);
 const uuid = require(`uuid-by-string`);
 const got = require(`got`);
 var parse = require('parse-link-header');
+const fs = require('fs');
 
 const app = express();
 app.use(logger(`dev`));
@@ -32,47 +33,63 @@ const schema = require(`./schema.json`);
 app.post(`/api/v1/synchronizer/schema`, (req, res) => res.json(schema));
 
 app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
-    var {requestedType, filter, pagination} = req.body;
+    var {requestedType, filter, pagination, account} = req.body;
     
     if (_.isEmpty(filter.libraryid)) {
         throw new Error(`Library ID must be specified`);
     }
-    const {libraryid} = filter;
 
-    var url = `https://api.zotero.org/groups/${libraryid}/items/top`;
-    if (pagination != null && pagination["link"] != null) {
-        url = pagination["link"];
-    } else if (pagination == null) {
-        pagination = {};
+    if (requestedType != `literature` && requestedType != `author`) { 
+        throw new Error(`Only literature and author databases can be synchronized`);
     }
 
-    if (requestedType == `literature`) {
-        var items = [];
-        response = await (got(url));
+    const {libraryid} = filter;
+    const filename = libraryid + "." + account + "." + requestedType + ".txt";
+
+    var synchronizationType = "delta";
+
+    var url = `https://api.zotero.org/groups/${libraryid}/items/top`;
+
+    if (pagination != null && pagination["link"] != null) {
+        url = pagination["link"];
+        synchronizationType = pagination["synchonizationType"];
+    } else if (pagination == null) {
+        pagination = {};
+        try {
+            const version = fs.readFileSync(path.resolve(__dirname, filename), 'utf8');
+            url += `?since=${version}`;
+          } catch (err) {
+            console.error(err);
+            synchronizationType = "full";
+          }
+    
+    }
+
+    var items = [];
+    response = await (got(url));
         
+    if (requestedType != `literature`) {
         for (item of JSON.parse(response.body)) {
             data = item.data;
             data.id = uuid(JSON.stringify(item.key));
             data.name = data.title;
             data.link = item.links.alternate.href;
             data.key = item.key;
+            data.authorId = [];
+            for (a of data.creators) {
+                if (a.creatorType != "author") {
+                    continue;
+                }
+                a.firstName = author.firstName.split(" ")[0];
+                a.name = author.firstName + " " + author.lastName;
+                a.id = uuid(JSON.stringify(author.name));
+                data.authorId.push(a.id);
+            }
+            data.__syncAction = "SET";
             items.push(data);
         };
-
-        var parsed = parse(response.headers.link);
-
-        pagination["hasNext"] = parsed["next"] != null;
-        if (pagination["hasNext"]) {
-            pagination["nextPageConfig"] =  {
-                "link": parsed["next"]["url"]
-              };
-        }
-
-        return res.json({items, pagination});
-
     } else if (requestedType == `author`) {
-        var items = {};
-        response = await (got(url));
+        items = {};
 
         for (item of JSON.parse(response.body)) {
             for (a of item.data.creators) {
@@ -83,30 +100,36 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 author.firstName = author.firstName.split(" ")[0];
                 author.name = author.firstName + " " + author.lastName;
                 author.id = uuid(JSON.stringify(author.name));
-                if (author.name in items) {
-                    items[author.name].literatureId.push(uuid(JSON.stringify(item.key)));
-                } else {
+                if (!(author.name in items)) {
                     items[author.name] = author;
-                    items[author.name].literatureId = [uuid(JSON.stringify(item.key))];
+                    items[author.name].__syncAction = "SET";
                 }
                 
             }
 
         }
-
-        var parsed = parse(response.headers.link);
-
-        pagination["hasNext"] = parsed["next"] != null;
-        if (pagination["hasNext"]) {
-            pagination["nextPageConfig"] =  {
-                "link": parsed["next"]["url"]
-              };
-        }
-
-        return res.json({items, pagination});
     }
 
-    throw new Error(`Only literature and author databases can be synchronized`);
+    var parsed = parse(response.headers.link);
+
+    pagination["hasNext"] = parsed["next"] != null;
+    if (pagination["hasNext"]) {
+        pagination["nextPageConfig"] =  {
+            "link": parsed["next"]["url"]
+            };
+    }  else {
+        // We've finished syncing this version
+        // Let's record its number
+        fs.writeFile(path.resolve(__dirname, filename), response.headers["Last-Modified-Version"], err => {
+            if (err) {
+                console.error(err);
+            }
+            // file written successfully
+            });
+    }
+
+    return res.json({items, pagination, synchronizationType});
+    
 }));
 
 app.use(function (req, res, next) {
