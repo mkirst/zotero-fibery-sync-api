@@ -80,9 +80,9 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 if (a.creatorType != "author") {
                     continue;
                 }
-                a.firstName = author.firstName.split(" ")[0];
-                a.name = author.firstName + " " + author.lastName;
-                a.id = uuid(JSON.stringify(author.name));
+                a.firstName = a.firstName.split(" ")[0];
+                a.name = a.firstName + " " + a.lastName;
+                a.id = uuid(JSON.stringify(a.name));
                 data.authorId.push(a.id);
             }
             data.__syncAction = "SET";
@@ -93,16 +93,15 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
         for (item of JSON.parse(response.body)) {
             for (a of item.data.creators) {
-                author = a;
-                if (author.creatorType != "author") {
+                if (a.creatorType != "author") {
                     continue;
                 }
-                author.firstName = author.firstName.split(" ")[0];
-                author.name = author.firstName + " " + author.lastName;
-                author.id = uuid(JSON.stringify(author.name));
-                if (!(author.name in items)) {
-                    items[author.name] = author;
-                    items[author.name].__syncAction = "SET";
+                a.firstName = a.firstName.split(" ")[0];
+                a.name = a.firstName + " " + a.lastName;
+                a.id = uuid(JSON.stringify(a.name));
+                if (!(a.name in items)) {
+                    items[a.name] = a;
+                    items[a.name].__syncAction = "SET";
                 }
                 
             }
