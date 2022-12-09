@@ -78,11 +78,11 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             console.error(err);
             synchronizationType = "full";
           }
-    
     }
 
     var items = [];
     response = await (got(url));
+    console.log(response);
         
     if (requestedType == `literature`) {
         for (item of JSON.parse(response.body)) {
