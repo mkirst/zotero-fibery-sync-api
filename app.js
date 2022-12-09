@@ -81,9 +81,9 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
           }
     }
 
-    var items = [];
+    const items = [];
     response = await (got(url));
-    console.log(response.body);
+    // console.log(response.body);
         
     if (requestedType == `literature`) {
         for (item of JSON.parse(response.body)) {
@@ -107,7 +107,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             items.push(data);
         };
     } else if (requestedType == `author`) {
-        items = {};
+        // items = {};
 
         for (item of JSON.parse(response.body)) {
             for (a of item.data.creators) {
@@ -117,11 +117,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 a.firstName = a.firstName.split(" ")[0];
                 a.name = a.firstName + " " + a.lastName;
                 a.id = uuid(JSON.stringify(a.name));
-                if (!(a.name in items)) {
-                    items[a.name] = a;
-                    items[a.name].__syncAction = "SET";
-                }
-                
+                a.__syncAction = "SET";
+                items.push(a);
             }
 
         }
