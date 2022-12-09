@@ -15,10 +15,10 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 // Uncomment to print out contents of requests
-// app.use(function (req, res, next) {
-//     console.log("Request: ", req);
-//     next();
-// });
+app.use(function (req, res, next) {
+    console.log("Res: ", res);
+    next();
+});
 
 app.get(`/logo`, (req, res) => res.sendFile(path.resolve(__dirname, `logo.svg`)));
 
@@ -143,7 +143,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             // file written successfully
             });
     }
-    console.log({items, pagination, synchronizationType});
+    // console.log({items, pagination, synchronizationType});
     return res.json({items, pagination, synchronizationType});
     
 }));
