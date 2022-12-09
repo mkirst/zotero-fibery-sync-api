@@ -81,7 +81,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
           }
     }
 
-    const items = [];
+    var items = [];
     response = await (got(url));
     // console.log(response.body);
         
@@ -122,6 +122,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             }
 
         }
+        // Remove duplicates
+        items = [...new Map(items.map((m) => [m.id, m])).values()];
     }
 
     var parsed = parse(response.headers.link);
