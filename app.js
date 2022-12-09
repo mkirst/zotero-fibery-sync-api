@@ -27,7 +27,7 @@ app.get(`/`, (req, res) => res.json(appConfig));
 
 app.post(`/validate`, (req, res) => res.json({name: `Public`}));
 
-app.post(`/api/v1/synchronizer/clearcache`, wrap(async (req, res) => {
+app.get(`/api/v1/synchronizer/clearcache`, (req, res) => {
     glob("**/*.literature.txt", function (er, files) {
         for (const file of files) {
             fs.unlinkSync(file);
@@ -39,7 +39,7 @@ app.post(`/api/v1/synchronizer/clearcache`, wrap(async (req, res) => {
         }
     });
 
-}));
+});
 
 const syncConfig = require(`./config.sync.json`);
 app.post(`/api/v1/synchronizer/config`, (req, res) => res.json(syncConfig));
@@ -60,14 +60,14 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
     const {libraryid} = filter;
     const filename = libraryid + "." + account["owner"] + "." + requestedType + ".txt";
-    console.log(filename);
+    console.log(filename, req.body);
     var synchronizationType = "delta";
 
     var url = `https://api.zotero.org/groups/${libraryid}/items/top`;
 
     if (pagination != null && pagination["link"] != null) {
         url = pagination["link"];
-        synchronizationType = pagination["synchonizationType"];
+        synchronizationType = pagination["synchronizationType"];
     } else if (pagination == null) {
         pagination = {};
         try {
