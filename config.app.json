@@ -9,10 +9,24 @@
       "name": "Public Access",
       "description": "There is no any authentication required",
       "fields": []
+    },
+    {
+      "description": "Provide Token",
+      "name": "Token Authentication",
+      "id": "token",
+      "fields": [
+          {
+              "type": "text",
+              "description": "Personal Token",
+              "id": "token"
+          }
+      ]
     }
   ],
   "sources": [],
   "responsibleFor": {
-    "dataSynchronization": true
-  }
+    "dataSynchronization": true,
+    "automations": true
+  },
+  "actions": []
 }

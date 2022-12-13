@@ -25,7 +25,18 @@ app.get(`/logo`, (req, res) => res.sendFile(path.resolve(__dirname, `logo.svg`))
 const appConfig = require(`./config.app.json`);
 app.get(`/`, (req, res) => res.json(appConfig));
 
-app.post(`/validate`, (req, res) => res.json({name: `Public`}));
+app.post(`/validate`, (req, res) => {
+    response = await got(`https://api.zotero.org/keys/${req.body.fields.token}`);
+    const user = response.body.username;
+    if (user) {
+        return res.json({
+            name: user,
+        });
+    }
+
+
+    return res.json({name: `Public`});
+});
 
 app.get(`/api/v1/synchronizer/clearcache`, (req, res) => {
     glob("**/*.literature.txt", function (er, files) {
