@@ -70,7 +70,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         throw new Error(`Library ID must be specified`);
     }
 
-    if (requestedType != `literature` && requestedType != `author`) { 
+    if (requestedType != `literature` && requestedType != `author` && requestedType != `venue` && requestedType != `tag`) { 
         throw new Error(`Only literature and author databases can be synchronized`);
     }
 
@@ -80,6 +80,9 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     var synchronizationType = "delta";
 
     var url = `https://api.zotero.org/groups/${libraryid}/items/top?limit=100`;
+    if (requestedType == "tag") {
+        url = `https://api.zotero.org/groups/${libraryid}/items/top/tags`;
+    }
 
     if (pagination != null && pagination["link"] != null) {
         url = pagination["link"];
@@ -119,6 +122,22 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 a.id = uuid(JSON.stringify(a.name));
                 data.authorId.push(a.id);
             }
+
+            if ("publicationTitle" in data) {
+                data.venueId = uuid(data.publicationTitle);
+            } else if ("conferenceName" in data) {
+                data.venueId = uuid(data.conferenceName);
+            } else if ("bookTitle" in data) {
+                data.venueId = uuid(data.bookTitle);
+            } else {
+                data.venueId = uuid(data.itemType);
+            }
+
+            data.tagId = [];
+            for (a of data.tags) {
+                a.id = uuid(a.tag);
+                data.tagId.push(a.id);
+            }
             data.__syncAction = "SET";
             items.push(data);
         };
@@ -140,6 +159,47 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         }
         // Remove duplicates
         items = [...new Map(items.map((m) => [m.id, m])).values()];
+    } else if (requestedType == `venue`) {
+        // items = {};
+
+        for (item of JSON.parse(response.body)) {
+            venue = {};
+            if ("publicationTitle" in data) {
+                venue.name = data.publicationTitle;
+                venue.type = "journal"
+            } else if ("conferenceName" in data) {
+                venue.name = data.conferenceName;
+                venue.type = "conference"
+            } else if ("bookTitle" in data) {
+                venue.name = data.bookTitle;
+                venue.type = "book"
+            } else {
+                venue.name = data.itemType;
+                venue.type = data.itemType;
+            }
+
+            venue.id = uuid(venue.name);
+
+            venue.__syncAction = "SET";
+            items.push(venue);
+
+        }
+        // Remove duplicates
+        items = [...new Map(items.map((m) => [m.id, m])).values()];
+    } else if (requestedType == `tag`) {
+
+        for (item of JSON.parse(response.body)) {
+
+            item.name = item.tag;
+
+            item.id = uuid(venue.name);
+            item.type = item.meta.type;
+            item.link = item.links.alternate.href;
+
+            item.__syncAction = "SET";
+            items.push(item);
+
+        }
     }
 
     var parsed = parse(response.headers.link);

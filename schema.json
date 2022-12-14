@@ -43,6 +43,28 @@
           "targetType": "author",
           "targetFieldId": "id"
         }
+      },      
+      "venueId": {
+        "type": "text",
+        "name": "Venue Id",
+        "relation": {
+          "cardinality": "one-to-many",
+          "targetName": "Works",
+          "name": "Venue",
+          "targetType": "venue",
+          "targetFieldId": "id"
+        }
+      },      
+      "tagId": {
+        "type": "array[text]",
+        "name": "Tag Id",
+        "relation": {
+          "cardinality": "many-to-many",
+          "targetName": "Works",
+          "name": "Tags",
+          "targetType": "tag",
+          "targetFieldId": "id"
+        }
       }
     },
     "author" : {
@@ -62,5 +84,38 @@
         "name": "Last Name",
         "type": "text"
       }
-    }
+    },
+    "venue" : {
+      "id": {
+        "name": "Id",
+        "type": "id"
+      },
+      "name": {
+        "name": "Name",
+        "type": "text"
+      },
+      "type": {
+        "name": "Venue Type",
+        "type": "text"
+      }
+    },
+    "tag" : {
+      "id": {
+        "name": "Id",
+        "type": "id"
+      },
+      "name": {
+        "name": "Name",
+        "type": "text"
+      }, 
+      "type": {
+        "name": "Type",
+        "type": "text"
+      },
+      "link": {
+        "name": "Zotero Link",
+        "type": "text",
+        "subType": "url"
+      }
+    }    
 }
