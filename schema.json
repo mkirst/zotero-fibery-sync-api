@@ -8,7 +8,7 @@
         "name": "Name",
         "type": "text"
       },
-      "date": {
+      "year": {
         "name": "Publication Date",
         "type": "date"
       },

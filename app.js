@@ -186,7 +186,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         }
         
         response = await (got(url));
-        console.log(response);
+        // console.log(response);
         json_obj = JSON.parse(response.body);
         json_obj.title = output[0].title;
         json_obj.date = output[0].issued["date-parts"][0][0];
@@ -249,14 +249,6 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
 
         var new_url = `https://api.zotero.org/groups/${libraryid}/items`;
 
-        console.log("about to contact zotero", {
-            method: 'post',
-            headers: {
-                'Zotero-API-Key': account.token,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(json_obj)
-        });
         var result = await fetch(new_url, {
             method: 'post',
             headers: {
@@ -266,7 +258,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             body: JSON.stringify([json_obj])
         });
         json_resp = await result.json();
-        console.log(json_resp);
+        // console.log(json_resp);
         return res.json(json_resp);
 
     }
