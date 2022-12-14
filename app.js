@@ -9,6 +9,7 @@ var parse = require('parse-link-header');
 const fs = require('fs');
 var glob = require("glob")
 const Cite = require('citation-js')
+import fetch from "node-fetch";
 
 const app = express();
 app.use(logger(`dev`));
