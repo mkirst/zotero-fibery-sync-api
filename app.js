@@ -79,11 +79,11 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     console.log(filename, req.body);
     var synchronizationType = "delta";
 
-    var url = `https://api.zotero.org/groups/${libraryid}/items/top?limit=100`;
+    var url = `https://api.zotero.org/groups/${libraryid}/items/top?limit=100&`;
     if (requestedType == "tag") {
         url = `https://api.zotero.org/groups/${libraryid}/items/tags`;
     } else if (requestedType == "note") {
-        url = `https://api.zotero.org/groups/${libraryid}/items?itemType=note`;
+        url = `https://api.zotero.org/groups/${libraryid}/items?itemType=note&`;
     }
 
     if (pagination != null && pagination["link"] != null) {
