@@ -10,7 +10,7 @@
       },
       "date": {
         "name": "Publication Date",
-        "type": "date"
+        "type": "text"
       },
       "link": {
         "name": "Zotero Link",
