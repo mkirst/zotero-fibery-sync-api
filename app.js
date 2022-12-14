@@ -8,6 +8,7 @@ const got = require(`got`);
 var parse = require('parse-link-header');
 const fs = require('fs');
 var glob = require("glob")
+const {Cite} = require('@citation-js/core')
 
 const app = express();
 app.use(logger(`dev`));
@@ -161,6 +162,15 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     // console.log({items, pagination, synchronizationType});
     return res.json({items, pagination, synchronizationType});
     
+}));
+
+app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
+    if (req.body.action == "add-new-paper") {
+        let example = new Cite(res.body.args.doi);
+        let output = example.format('bibtex');
+        console.log(output);
+    }
+
 }));
 
 app.use(function (req, res, next) {
