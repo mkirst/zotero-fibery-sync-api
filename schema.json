@@ -54,7 +54,18 @@
           "targetType": "tag",
           "targetFieldId": "id"
         }
-      }
+      },
+      "venueId": {
+        "type": "text",
+        "name": "Venue Id",
+        "relation": {
+          "cardinality": "many-to-one",
+          "targetName": "Works",
+          "name": "Venue",
+          "targetType": "venue",
+          "targetFieldId": "id"
+        }
+      } 
     },
     "author" : {
       "id": {
@@ -86,18 +97,7 @@
       "type": {
         "name": "Venue Type",
         "type": "text"
-      },
-      "literatureId": {
-        "type": "array[text]",
-        "name": "Literature Id",
-        "relation": {
-          "cardinality": "many-to-one",
-          "targetName": "Venue",
-          "name": "Works",
-          "targetType": "literature",
-          "targetFieldId": "id"
-        }
-      }      
+      }     
     },
     "tag" : {
       "id": {

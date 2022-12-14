@@ -125,6 +125,15 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 a.id = uuid(JSON.stringify(a.name));
                 data.authorId.push(a.id);
             }
+            if ("publicationTitle" in data) {
+                data.venueId = uuid(JSON.stringify(data.publicationTitle));
+            } else if ("conferenceName" in data) {
+                data.venueId = uuid(JSON.stringify(data.conferenceName));
+            } else if ("bookTitle" in data) {
+                data.venueId = uuid(JSON.stringify(data.bookTitle));
+            } else {
+                data.venueId = uuid(JSON.stringify(data.itemType));
+            }
 
             data.tagId = [];
             for (a of data.tags) {
@@ -181,10 +190,10 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 venue.name = venuename;
                 venue.type = venuetype;
                 venue.__syncAction = "SET";
-                venue.literatureId = [uuid(JSON.stringify(data.key))];
-            } else {
-                venue.literatureId.push(uuid(JSON.stringify(data.key)));
-            }
+                // venue.literatureId = [uuid(JSON.stringify(data.key))];
+            } //else {
+                // venue.literatureId.push(uuid(JSON.stringify(data.key)));
+           // }
 
             // items.push(venue);
 
