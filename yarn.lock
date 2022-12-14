@@ -2,7 +2,21 @@
 # yarn lockfile v1
 
 
-"@citation-js/core@^0.6.0", "@citation-js/core@^0.6.1":
+"@citation-js/cli@0.6.4":
+  "integrity" "sha512-xzzIRyn7zRtdsvAKulBv1ermhwvVXUeOzjiB0BN3pRlPesDMv/OUN6vFCBqF8WXNld1dtNVoGnsQFEknGGwPeg=="
+  "resolved" "https://registry.npmjs.org/@citation-js/cli/-/cli-0.6.4.tgz"
+  "version" "0.6.4"
+  dependencies:
+    "@citation-js/core" "^0.6.1"
+    "@citation-js/plugin-bibjson" "^0.6.1"
+    "@citation-js/plugin-bibtex" "^0.6.1"
+    "@citation-js/plugin-csl" "^0.6.4"
+    "@citation-js/plugin-doi" "^0.6.1"
+    "@citation-js/plugin-ris" "^0.6.2"
+    "@citation-js/plugin-wikidata" "^0.6.4"
+    "commander" "^9.2.0"
+
+"@citation-js/core@^0.6.0", "@citation-js/core@^0.6.1", "@citation-js/core@0.6.1":
   "integrity" "sha512-zvVxsAP4ciVHiZ60TmKTfjui4m6xeISSp/rtIhOcvZxZ70bBfkt83+kGnuI4xRlhB/oUrZN2fC9BSRKdivSobQ=="
   "resolved" "https://registry.npmjs.org/@citation-js/core/-/core-0.6.1.tgz"
   "version" "0.6.1"
@@ -12,17 +26,25 @@
     "fetch-ponyfill" "^7.1.0"
     "sync-fetch" "^0.4.1"
 
-"@citation-js/date@^0.5.0":
+"@citation-js/date@^0.5.0", "@citation-js/date@0.5.1":
   "integrity" "sha512-1iDKAZ4ie48PVhovsOXQ+C6o55dWJloXqtznnnKy6CltJBQLIuLLuUqa8zlIvma0ZigjVjgDUhnVaNU1MErtZw=="
   "resolved" "https://registry.npmjs.org/@citation-js/date/-/date-0.5.1.tgz"
   "version" "0.5.1"
 
-"@citation-js/name@^0.4.2":
+"@citation-js/name@^0.4.2", "@citation-js/name@0.4.2":
   "integrity" "sha512-brSPsjs2fOVzSnARLKu0qncn6suWjHVQtrqSUrnqyaRH95r/Ad4wPF5EsoWr+Dx8HzkCGb/ogmoAzfCsqlTwTQ=="
   "resolved" "https://registry.npmjs.org/@citation-js/name/-/name-0.4.2.tgz"
   "version" "0.4.2"
 
-"@citation-js/plugin-bibtex@^0.6.1":
+"@citation-js/plugin-bibjson@^0.6.1", "@citation-js/plugin-bibjson@0.6.1":
+  "integrity" "sha512-5dv5DxHtM8JotLqyICbRZpmBwR9DWUQJio4mNBbHsf3INtk5rYOAOVpLjsBknDQBN+EI6ReanhswFZmxYHVdUg=="
+  "resolved" "https://registry.npmjs.org/@citation-js/plugin-bibjson/-/plugin-bibjson-0.6.1.tgz"
+  "version" "0.6.1"
+  dependencies:
+    "@citation-js/date" "^0.5.0"
+    "@citation-js/name" "^0.4.2"
+
+"@citation-js/plugin-bibtex@^0.6.1", "@citation-js/plugin-bibtex@0.6.1":
   "integrity" "sha512-JMw9h9MUXH7YWvgN0j+A5xI4Fw3cHYcDMzpweeAcXBfjfnC6q30Dyvs2YxfUxNEKvWDgRQjAiNNIzgWXs9uK1Q=="
   "resolved" "https://registry.npmjs.org/@citation-js/plugin-bibtex/-/plugin-bibtex-0.6.1.tgz"
   "version" "0.6.1"
@@ -31,12 +53,37 @@
     "@citation-js/name" "^0.4.2"
     "moo" "^0.5.1"
 
-"@citation-js/plugin-doi@^0.6.1":
+"@citation-js/plugin-csl@^0.6.4", "@citation-js/plugin-csl@0.6.4":
+  "integrity" "sha512-RG4NrFIx0CZTfNeMCC8CL7UGFRiUv5/bNd/Nc6Q/NHx0cS/tYDQcKt0M24dpOI7PAZwVoddbDW4Iakn6nS4QsQ=="
+  "resolved" "https://registry.npmjs.org/@citation-js/plugin-csl/-/plugin-csl-0.6.4.tgz"
+  "version" "0.6.4"
+  dependencies:
+    "@citation-js/date" "^0.5.0"
+    "citeproc" "^2.4.6"
+
+"@citation-js/plugin-doi@^0.6.1", "@citation-js/plugin-doi@0.6.1":
   "integrity" "sha512-k5kMVIcWG9B2r8B5/QSSlGi8CMSShWSzcgX45Iksp9rz4MyM1BclWh4zNYm41yDYHCXYcSN7ZLIEfUt5DLgQ8A=="
   "resolved" "https://registry.npmjs.org/@citation-js/plugin-doi/-/plugin-doi-0.6.1.tgz"
   "version" "0.6.1"
   dependencies:
     "@citation-js/date" "^0.5.0"
+
+"@citation-js/plugin-ris@^0.6.2", "@citation-js/plugin-ris@0.6.2":
+  "integrity" "sha512-qW1k1DUzj8eWPh6Xg/pn999tSlMfAR2fwyFgyd1HalLVSNHUDvIJbJF4vq4mCWQYWQ+FKtN1x5ILd1A6bOss4g=="
+  "resolved" "https://registry.npmjs.org/@citation-js/plugin-ris/-/plugin-ris-0.6.2.tgz"
+  "version" "0.6.2"
+  dependencies:
+    "@citation-js/date" "^0.5.0"
+    "@citation-js/name" "^0.4.2"
+
+"@citation-js/plugin-wikidata@^0.6.4", "@citation-js/plugin-wikidata@0.6.4":
+  "integrity" "sha512-RTSwu2a6gytf/HYG2Yblg0Db8kZypGr9YxBPkyqRDY/gDVx2y3zPT7vfLdotsNxvn0Gbd8eQAAP+hoPkz+ODPw=="
+  "resolved" "https://registry.npmjs.org/@citation-js/plugin-wikidata/-/plugin-wikidata-0.6.4.tgz"
+  "version" "0.6.4"
+  dependencies:
+    "@citation-js/date" "^0.5.0"
+    "@citation-js/name" "^0.4.2"
+    "wikidata-sdk" "^8.0.0"
 
 "@sindresorhus/is@^4.0.0":
   "integrity" "sha512-BrzrgtaqEre0qfvI8sMTaEvx+bayuhPmfe2rfeUGPPHYr/PLxCOqkOe4TQTDPb+qcqgNcsAtXV/Ew74mcDIE8w=="
@@ -266,6 +313,28 @@
   optionalDependencies:
     "fsevents" "~2.3.2"
 
+"citation-js@^0.6.4":
+  "integrity" "sha512-0PzLs7L7yf0NWCNDg7TEIZ0YoFkw62JRFzM5qciBR8WzaFiWyOKr3PksNJneNK+/ZqRliMbGdVNunOUiZ0iERQ=="
+  "resolved" "https://registry.npmjs.org/citation-js/-/citation-js-0.6.4.tgz"
+  "version" "0.6.4"
+  dependencies:
+    "@citation-js/cli" "0.6.4"
+    "@citation-js/core" "0.6.1"
+    "@citation-js/date" "0.5.1"
+    "@citation-js/name" "0.4.2"
+    "@citation-js/plugin-bibjson" "0.6.1"
+    "@citation-js/plugin-bibtex" "0.6.1"
+    "@citation-js/plugin-csl" "0.6.4"
+    "@citation-js/plugin-doi" "0.6.1"
+    "@citation-js/plugin-ris" "0.6.2"
+    "@citation-js/plugin-wikidata" "0.6.4"
+    "citeproc" "^2.4.59"
+
+"citeproc@^2.4.59", "citeproc@^2.4.6":
+  "integrity" "sha512-l3uFfSEwNZp/jlz/TpgyBs85kOww6VlQHbAth0cpbgOn6iulZd+QlFY43LrRelzcYt3FZHTZ3soDyd8lNmkqdw=="
+  "resolved" "https://registry.npmjs.org/citeproc/-/citeproc-2.4.62.tgz"
+  "version" "2.4.62"
+
 "cliui@^7.0.2":
   "integrity" "sha512-OcRE68cOsVMXp1Yvonl/fzkQOyjLSu/8bhPDfQt0e0/Eb283TKP20Fs2MqoPsr9SwA595rRCA+QMzYc9nBP+JQ=="
   "resolved" "https://registry.npmjs.org/cliui/-/cliui-7.0.4.tgz"
@@ -300,6 +369,11 @@
   "version" "1.0.8"
   dependencies:
     "delayed-stream" "~1.0.0"
+
+"commander@^9.2.0":
+  "integrity" "sha512-5EEkTNyHNGFPD2H+c/dXXfQZYa/scCKasxWcXJaWnNJ99pnQN9Vnmqow+p+PlFPE63Q6mThaZws1T+HxfpgtPw=="
+  "resolved" "https://registry.npmjs.org/commander/-/commander-9.4.1.tgz"
+  "version" "9.4.1"
 
 "component-emitter@^1.2.0":
   "integrity" "sha512-Rd3se6QB+sO1TwqZjscQrurpEPIfO0/yYnSin6Q/rD3mOutHvUrCAhJub3r90uNb+SESBuE0QYoB90YdfatsRg=="
@@ -1345,6 +1419,18 @@
   dependencies:
     "tr46" "~0.0.3"
     "webidl-conversions" "^3.0.0"
+
+"wikibase-sdk@^8.1.0":
+  "integrity" "sha512-aDKqAzFM+D6MQ7dSL4O6NQ0EmWGC/K7/Ngby9mBXCfAyxTzF+50y/qqio+UC5Rlm4CeE49ON894A+abjthWNcw=="
+  "resolved" "https://registry.npmjs.org/wikibase-sdk/-/wikibase-sdk-8.1.0.tgz"
+  "version" "8.1.0"
+
+"wikidata-sdk@^8.0.0":
+  "integrity" "sha512-8v0dnY56JDRUd8YMrvSQeMjWJW5I2a2FVhm7h9Y0P9J11HrB3/utMAKaBwGOPPEMwsyjVZUvAskByepTtNvH3g=="
+  "resolved" "https://registry.npmjs.org/wikidata-sdk/-/wikidata-sdk-8.1.0.tgz"
+  "version" "8.1.0"
+  dependencies:
+    "wikibase-sdk" "^8.1.0"
 
 "workerpool@6.2.1":
   "integrity" "sha512-ILEIE97kDZvF9Wb9f6h5aXK4swSlKGUcOEGiIYb2OOu/IrDU9iwj0fD//SsA6E5ibwJxpEvhullJY4Sl4GcpAw=="

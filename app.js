@@ -8,7 +8,7 @@ const got = require(`got`);
 var parse = require('parse-link-header');
 const fs = require('fs');
 var glob = require("glob")
-const {Cite} = require('@citation-js/core')
+const {Cite} = require('citation-js')
 
 const app = express();
 app.use(logger(`dev`));
@@ -166,9 +166,80 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
 app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
     if (req.body.action == "add-new-paper") {
-        let example = new Cite(res.body.args.doi);
-        let output = example.format('bibtex');
-        console.log(output);
+        let a = new Cite(res.body.args.doi);
+        let output = JSON.parse(a.format('json'));
+        
+        var url = "https://api.zotero.org/items/new?itemType=";
+        
+        if (output[0].type == "article-journal") {
+            url += "journalArticle";
+        } else if (output[0].type == "paper-conference") {
+            url += "conferencePaper";
+        } else {
+            url += "report";
+        }
+        
+        response = await (got(url));
+        json_obj = response.body;
+        json_obj.title = output[0].title;
+        json_obj.date = output[0].issued["date-parts"][0][0];
+        if ("volume" in json_obj && "volume" in output[0]) {
+            json_obj.volume = output[0].volume;
+        }
+
+        if ("url" in json_obj && "URL" in output[0]) {
+            json_obj.url = output[0].URL;
+        }
+
+        if ("publisher" in json_obj && "publisher" in output[0]) {
+            json_obj.publisher = output[0].publisher;
+        }
+
+        if ("abstractNote" in json_obj && "abstract" in output[0]) {
+            json_obj.abstractNote = output[0].abstract;
+        }
+
+        if ("pages" in json_obj && "page" in output[0]) {
+            json_obj.pages = output[0].page;
+        }
+
+        if ("issue" in json_obj && "issue" in output[0]) {
+            json_obj.issue = output[0].issue;
+        }
+
+        if ("ISSN" in json_obj && "ISSN" in output[0]) {
+            json_obj.ISSN = output[0].ISSN;
+        }
+
+        if ("ISBN" in json_obj && "ISBN" in output[0]) {
+            json_obj.ISBN = output[0].ISBN;
+        }
+
+        var counter = 0;
+        for (author of output[0].author) {
+            new_author = JSON.parse(JSON.stringify(json_obj.creators[0]));
+            new_author.firstName = author.given;
+            new_author.lastName = author.family;
+            if (counter > 1) {
+                json_obj.creators.push(new_author);
+            } else {
+                json_obj.creators[0] = new_author;
+            }
+
+        }
+
+        if (output[0].type == "article-journal") {
+            json_obj.DOI = output[0].DOI;
+            json_obj.publicationTitle = output[0]["container-title"];            
+        } else if (output[0].type == "paper-conference") {
+            json_obj.DOI = output[0].DOI;
+            json_obj.conferenceName = output[0]["event-title"];
+            json_obj.proceedingsTitle = output[0]["container-title"];
+        } else {
+            json_obj.extra = "DOI: " + output[0].DOI;
+        }
+
+
     }
 
 }));

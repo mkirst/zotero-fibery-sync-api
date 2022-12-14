@@ -31,7 +31,7 @@
   "actions": [
     {
       "action": "add-new-paper",
-      "name": "Add new paper to Zotero library",
+      "name": "Add new paper to Zotero library by DOI",
       "args": [{"id":"doi", "name":"DOI", "type":"text"}]
     }
   ]

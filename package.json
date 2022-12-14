@@ -11,9 +11,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@citation-js/core": "^0.6.1",
-    "@citation-js/plugin-bibtex": "^0.6.1",
-    "@citation-js/plugin-doi": "^0.6.1",
+    "citation-js": "^0.6.4",
     "express": "^4.18.2",
     "express-async-wrap": "^1.0.0",
     "glob": "8.0.3",
