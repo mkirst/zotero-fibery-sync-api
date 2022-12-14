@@ -260,7 +260,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         var result = await fetch(new_url, {
             method: 'post',
             headers: {
-                'Zotero-Write-Token': account.token,
+                'Zotero-API-Key': account.token,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(json_obj)
