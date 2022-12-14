@@ -252,7 +252,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         console.log("about to contact zotero", {
             method: 'post',
             headers: {
-                'Zotero-Write-Token': account.token,
+                'Zotero-API-Key': account.token,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(json_obj)
@@ -263,7 +263,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
                 'Zotero-API-Key': account.token,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(json_obj)
+            body: JSON.stringify([json_obj])
         });
         json_resp = await result.json();
         console.log(json_resp);
