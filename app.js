@@ -258,7 +258,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             },
             body: JSON.stringify(json_obj)
         });
-        json_resp = result.json();
+        json_resp = await result.json();
         console.log(json_resp);
         return res.json(json_resp);
 
