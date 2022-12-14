@@ -165,8 +165,9 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 }));
 
 app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
-    var {action, account} = req.body;
-    console.log(account, action);
+    var {action, account, filter} = req.body;
+    console.log(account, action, req.body);
+    const {libraryid} = filter;
     if (action.action == "add-new-paper") {
         let a = new Cite(action.args.doi);
         let output = JSON.parse(a.format('data'));
