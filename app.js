@@ -249,9 +249,9 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
 
         var new_url = `https://api.zotero.org/groups/${libraryid}/items`;
 
-        console.log("about to contact zotero");
+        console.log("about to contact zotero", json_obj);
         var result = await fetch(new_url, {
-            method: 'POST',
+            method: 'post',
             headers: {
                 'Zotero-Write-Token': account.token,
                 'Content-Type': 'application/json'
