@@ -169,7 +169,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
     console.log(account, action);
     if (action.action == "add-new-paper") {
         let a = new Cite(action.args.doi);
-        let output = JSON.parse(a.format('json'));
+        let output = JSON.parse(a.format('data'));
         
         var url = "https://api.zotero.org/items/new?itemType=";
         
