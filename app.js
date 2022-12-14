@@ -109,7 +109,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     if (requestedType == `literature`) {
         for (item of JSON.parse(response.body)) {
             data = item.data;
-            console.log(item.key);
+            // console.log(item.key);
             data.bibtex = (await got(`https://api.zotero.org/groups/${libraryid}/items/${item.key}?format=bibtex`)).body;
             data.id = uuid(JSON.stringify(item.key));
             data.name = data.title;
@@ -128,7 +128,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
             data.tagId = [];
             for (a of data.tags) {
-                a.id = uuid(a.tag);
+                a.id = uuid(JSON.stringify(a.tag));
                 data.tagId.push(a.id);
             }
             data.__syncAction = "SET";
@@ -197,7 +197,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
             item.name = item.tag;
 
-            item.id = uuid(item.name);
+            item.id = uuid(JSON.stringify(item.name));
             item.type = item.meta.type;
             item.link = item.links.alternate.href;
 
