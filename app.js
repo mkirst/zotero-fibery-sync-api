@@ -173,11 +173,11 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 venuetype = data.itemType;
             }
 
-            if (!(uuid(venuename) in items)) {
-                items[uuid(venuename)] = {};
-                venue = items[uuid(venuename)]
+            if (!(uuid(JSON.stringify(venuename)) in items)) {
+                items[uuid(JSON.stringify(venuename))] = {};
+                venue = items[uuid(JSON.stringify(venuename))]
 
-                venue.id = uuid(venuename);
+                venue.id = uuid(JSON.stringify(venuename));
                 venue.name = venuename;
                 venue.type = venuetype;
                 venue.__syncAction = "SET";
@@ -210,7 +210,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         for (item of JSON.parse(response.body)) {
             data = item.data;
             data.name = data.key;
-            data.id = uuid(data.key);
+            data.id = uuid(JSON.stringify(data.key));
             data.literatureId = uuid(JSON.stringify(data.parentItem));
             data.link = item.links.alternate.href;
             data.creator = item.meta.createdByUser.name;
