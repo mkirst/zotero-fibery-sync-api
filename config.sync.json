@@ -7,6 +7,14 @@
     {
       "id": "author",
       "name": "Author"
+    },
+    {
+      "id": "venue",
+      "name": "Venue"
+    },
+    {
+      "id": "tag",
+      "name": "Tag"
     }
   ],
   "filters" : [{
