@@ -180,9 +180,9 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 venue.name = venuename;
                 venue.type = venuetype;
                 venue.__syncAction = "SET";
-                venue.literatureId = [uuid(data.key)];
+                venue.literatureId = [uuid(JSON.stringify(data.key))];
             } else {
-                venue.literatureId.push(uuid(data.key));
+                venue.literatureId.push(uuid(JSON.stringify(data.key)));
             }
 
             // items.push(venue);
@@ -210,7 +210,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             data = item.data;
             data.name = data.key;
             data.id = uuid(data.key);
-            data.literatureId = uuid(data.parentItem);
+            data.literatureId = uuid(JSON.stringify(data.parentItem));
             data.link = item.links.alternate.href;
             data.creator = item.meta.createdByUser.name;
             data.__syncAction = "SET";
