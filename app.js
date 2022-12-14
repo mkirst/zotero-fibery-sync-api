@@ -125,16 +125,6 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 data.authorId.push(a.id);
             }
 
-            if ("publicationTitle" in data) {
-                data.venueId = uuid(data.publicationTitle);
-            } else if ("conferenceName" in data) {
-                data.venueId = uuid(data.conferenceName);
-            } else if ("bookTitle" in data) {
-                data.venueId = uuid(data.bookTitle);
-            } else {
-                data.venueId = uuid(data.itemType);
-            }
-
             data.tagId = [];
             for (a of data.tags) {
                 a.id = uuid(a.tag);
@@ -162,32 +152,44 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         // Remove duplicates
         items = [...new Map(items.map((m) => [m.id, m])).values()];
     } else if (requestedType == `venue`) {
-        // items = {};
+        items = {};
 
         for (item of JSON.parse(response.body)) {
-            venue = {};
+            data = item.data;
+            var venuename;
+            var venuetype;
             if ("publicationTitle" in data) {
-                venue.name = data.publicationTitle;
-                venue.type = "journal"
+                venuename = data.publicationTitle;
+                venuetype = "journal"
             } else if ("conferenceName" in data) {
-                venue.name = data.conferenceName;
-                venue.type = "conference"
+                venuename = data.conferenceName;
+                venuetype = "conference"
             } else if ("bookTitle" in data) {
-                venue.name = data.bookTitle;
-                venue.type = "book"
+                venuename = data.bookTitle;
+                venuetype = "book"
             } else {
-                venue.name = data.itemType;
-                venue.type = data.itemType;
+                venuename = data.itemType;
+                venuetype = data.itemType;
             }
 
-            venue.id = uuid(venue.name);
+            if (!(uuid(venuename) in items)) {
+                items[uuid(venuename)] = {};
+                venue = items[uuid(venuename)]
 
-            venue.__syncAction = "SET";
-            items.push(venue);
+                venue.id = uuid(venuename);
+                venue.name = venuename;
+                venue.type = venuetype;
+                venue.__syncAction = "SET";
+                venue.literatureId = [uuid(data.key)];
+            } else {
+                venue.literatureId.push(uuid(data.key));
+            }
+
+            // items.push(venue);
 
         }
         // Remove duplicates
-        items = [...new Map(items.map((m) => [m.id, m])).values()];
+        // items = [...new Map(items.map((m) => [m.id, m])).values()];
     } else if (requestedType == `tag`) {
 
         for (item of JSON.parse(response.body)) {
