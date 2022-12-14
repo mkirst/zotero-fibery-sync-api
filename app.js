@@ -166,7 +166,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
 app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
     var {action, account} = req.body;
-
+    console.log(account, action);
     if (action == "add-new-paper") {
         let a = new Cite(res.body.args.doi);
         let output = JSON.parse(a.format('json'));
@@ -182,6 +182,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         }
         
         response = await (got(url));
+        console.log(response);
         json_obj = response.body;
         json_obj.title = output[0].title;
         json_obj.date = output[0].issued["date-parts"][0][0];
@@ -243,8 +244,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
 
         var new_url = `https://api.zotero.org/groups/${libraryid}/items`;
 
-        console.log(account);
-        var result;
+        console.log("about to contact zotero");
         var result = await fetch(new_url, {
             method: 'POST',
             headers: {
@@ -253,9 +253,11 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             },
             body: JSON.stringify(json_obj)
         });
-        res.json(result.json());
+        console.log(result.json());
+        return res.json(result.json());
 
     }
+    return res.json({"message":"invalid action"});
 
 }));
 
