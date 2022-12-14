@@ -183,9 +183,10 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         
         response = await (got(url));
         console.log(response);
-        json_obj = response.body;
+        json_obj = JSON.parse(response.body);
         json_obj.title = output[0].title;
         json_obj.date = output[0].issued["date-parts"][0][0];
+
         if ("volume" in json_obj && "volume" in output[0]) {
             json_obj.volume = output[0].volume;
         }
