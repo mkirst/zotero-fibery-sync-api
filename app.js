@@ -109,6 +109,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     if (requestedType == `literature`) {
         for (item of JSON.parse(response.body)) {
             data = item.data;
+            console.log(item.key);
             data.bibtex = (await got(`https://api.zotero.org/groups/${libraryid}/items/${item.key}?format=bibtex`)).body;
             data.id = uuid(JSON.stringify(item.key));
             data.name = data.title;
