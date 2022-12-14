@@ -29,6 +29,10 @@
         "name": "bibtex",
         "type": "text"
       },
+      "abstractNote": {
+        "name": "Abstract",
+        "type": "text"
+      },      
       "authorId": {
         "type": "array[text]",
         "name": "Author Id",
