@@ -165,7 +165,9 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 }));
 
 app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
-    if (req.body.action == "add-new-paper") {
+    var {action, account} = req.body;
+
+    if (action == "add-new-paper") {
         let a = new Cite(res.body.args.doi);
         let output = JSON.parse(a.format('json'));
         
@@ -239,6 +241,18 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             json_obj.extra = "DOI: " + output[0].DOI;
         }
 
+        var new_url = `https://api.zotero.org/groups/${libraryid}/items`;
+
+        console.log(account);
+        fetch(new_url, {
+            method: 'POST',
+            headers: {
+                'Zotero-Write-Token': account.token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(json_obj)
+        })
+        .then(response => res.json(response.json()))
 
     }
 
