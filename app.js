@@ -192,7 +192,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
             item.name = item.tag;
 
-            item.id = uuid(venue.name);
+            item.id = uuid(item.name);
             item.type = item.meta.type;
             item.link = item.links.alternate.href;
 
