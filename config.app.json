@@ -28,5 +28,11 @@
     "dataSynchronization": true,
     "automations": true
   },
-  "actions": ["add-new-paper"]
+  "actions": [
+    {
+      "action": "add-new-paper",
+      "name": "Add new paper to Zotero library",
+      "args": [{"id":"doi", "name":"DOI", "type":"text"}]
+    }
+  ]
 }
