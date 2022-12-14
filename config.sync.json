@@ -15,6 +15,10 @@
     {
       "id": "tag",
       "name": "Tag"
+    },
+    {
+      "id": "note",
+      "name": "Note"
     }
   ],
   "filters" : [{

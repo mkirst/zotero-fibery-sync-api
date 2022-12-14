@@ -70,7 +70,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         throw new Error(`Library ID must be specified`);
     }
 
-    if (requestedType != `literature` && requestedType != `author` && requestedType != `venue` && requestedType != `tag`) { 
+    if (requestedType != `literature` && requestedType != `author` && requestedType != `venue` && requestedType != `tag` && requestedType != `note`) { 
         throw new Error(`Only literature and author databases can be synchronized`);
     }
 
@@ -81,7 +81,9 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
     var url = `https://api.zotero.org/groups/${libraryid}/items/top?limit=100`;
     if (requestedType == "tag") {
-        url = `https://api.zotero.org/groups/${libraryid}/items/top/tags`;
+        url = `https://api.zotero.org/groups/${libraryid}/items/tags`;
+    } else if (requestedType == "note") {
+        url = `https://api.zotero.org/groups/${libraryid}/items?itemType=note`;
     }
 
     if (pagination != null && pagination["link"] != null) {
@@ -199,6 +201,18 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             item.__syncAction = "SET";
             items.push(item);
 
+        }
+    } else if (requestedType == `note`) {
+
+        for (item of JSON.parse(response.body)) {
+            data = item.data;
+            data.name = data.key;
+            data.id = uuid(data.key);
+            data.literatureId = uuid(data.parentItem);
+            data.link = item.links.alternate.href;
+            data.creator = item.meta.createdByUser.name;
+            data.__syncAction = "SET";
+            items.push(data);
         }
     }
 

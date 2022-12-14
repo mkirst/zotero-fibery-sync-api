@@ -48,7 +48,7 @@
         "type": "text",
         "name": "Venue Id",
         "relation": {
-          "cardinality": "one-to-many",
+          "cardinality": "many-to-one",
           "targetName": "Works",
           "name": "Venue",
           "targetType": "venue",
@@ -116,6 +116,56 @@
         "name": "Zotero Link",
         "type": "text",
         "subType": "url"
+      }
+    },
+    "note" : {
+      "id": {
+        "name": "Id",
+        "type": "id"
+      },
+      "name": {
+        "name": "Name",
+        "type": "text"
+      }, 
+      "creator": {
+        "name": "Created By",
+        "type": "text"
+      },
+      "link": {
+        "name": "Zotero Link",
+        "type": "text",
+        "subType": "url"
+      },
+      "version": {
+        "name": "Zotero Version",
+        "type": "text"
+      },
+      "parentItem": {
+        "name": "Parent Zotero Key",
+        "type": "text"
+      },
+      "note": {
+        "name": "Note",
+        "type": "text"
+      },
+      "dateAdded": {
+        "name": "Data Added",
+        "type": "date"
+      },
+      "dateModified": {
+        "name": "Data Modified",
+        "type": "date"
+      },      
+      "literatureId": {
+        "type": "text",
+        "name": "Literature Id",
+        "relation": {
+          "cardinality": "many-to-one",
+          "targetName": "Notes",
+          "name": "Literature",
+          "targetType": "literature",
+          "targetFieldId": "id"
+        }
       }
     }    
 }
