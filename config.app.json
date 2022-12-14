@@ -28,5 +28,5 @@
     "dataSynchronization": true,
     "automations": true
   },
-  "actions": []
+  "actions": ["add-new-paper"]
 }
