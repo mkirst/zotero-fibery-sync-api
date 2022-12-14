@@ -8,7 +8,7 @@ const got = require(`got`);
 var parse = require('parse-link-header');
 const fs = require('fs');
 var glob = require("glob")
-const {Cite} = require('citation-js')
+const Cite = require('citation-js')
 
 const app = express();
 app.use(logger(`dev`));
