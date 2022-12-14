@@ -167,9 +167,9 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 }));
 
 app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     var {action, account} = req.body;
-    console.log(account, action);
+    // console.log(account, action);
     const libraryid = "2836051";
     if (action.action == "add-new-paper") {
         let a = new Cite(action.args.doi);
@@ -258,8 +258,9 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             },
             body: JSON.stringify(json_obj)
         });
-        // console.log(result.json());
-        return res.json(result.json());
+        json_resp = result.json();
+        console.log(json_resp);
+        return res.json(json_resp);
 
     }
     return res.json({"message":"invalid action"});
