@@ -129,6 +129,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 data.venueId = uuid(JSON.stringify(data.publicationTitle));
             } else if ("conferenceName" in data) {
                 data.venueId = uuid(JSON.stringify(data.conferenceName));
+            } else if ("proceedingsTitle" in data) {
+                data.venueId = uuid(JSON.stringify(data.proceedingsTitle));
             } else if ("bookTitle" in data) {
                 data.venueId = uuid(JSON.stringify(data.bookTitle));
             } else {
@@ -170,13 +172,16 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             var venuetype;
             if ("publicationTitle" in data) {
                 venuename = data.publicationTitle;
-                venuetype = "journal"
+                venuetype = "journal";
             } else if ("conferenceName" in data) {
                 venuename = data.conferenceName;
-                venuetype = "conference"
+                venuetype = "conference";
+            } else if ("proceedingsTitle" in data) {
+                venuename = data.proceedingsTitle;
+                venuetype = "conference";                
             } else if ("bookTitle" in data) {
                 venuename = data.bookTitle;
-                venuetype = "book"
+                venuetype = "book";
             } else {
                 venuename = data.itemType;
                 venuetype = data.itemType;
