@@ -355,7 +355,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
     } else if (action.action == "add-new-note") {
 
         var url = "https://api.zotero.org/items/new?itemType=note";        
-        response = await (got(url));
+        // response = await (got(url));
         // console.log(response);
         json_obj = JSON.parse(response.body);
         json_obj.note = action.args.note;
