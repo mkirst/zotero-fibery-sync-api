@@ -355,13 +355,13 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
     } else if (action.action == "add-new-note") {
 
         var url = "https://api.zotero.org/items/new?itemType=note";        
-        // response = await (got(url));
-        // console.log(response);
+        response = await (got(url));
+        console.log(response);
         json_obj = JSON.parse(response.body);
         json_obj.note = action.args.note;
         json_obj.parentItem = action.args.parent;
         var new_url = `https://api.zotero.org/groups/${action.args.parent.libraryid}/items`;
-
+        console.log(json_obj);
         var result = await fetch(new_url, {
             method: 'post',
             headers: {
