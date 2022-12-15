@@ -32,7 +32,19 @@
     {
       "action": "add-new-paper",
       "name": "Add new paper to Zotero library by DOI",
-      "args": [{"id":"doi", "name":"DOI", "type":"text"}]
+      "args": [
+        {"id":"doi", "name":"DOI", "type":"text"},
+        {"id":"libraryid", "name":"Library ID", "type":"text"}
+      ]
+    },    
+    {
+      "action": "add-new-note",
+      "name": "Add new note to Zotero library",
+      "args": [
+        {"id":"note", "name":"Note Text", "type":"text"},
+        {"id":"parent", "name":"Literature Item ID", "type":"text"},        
+        {"id":"libraryid", "name":"Library ID", "type":"text"}
+      ]
     }
   ]
 }

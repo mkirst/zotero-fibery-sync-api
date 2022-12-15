@@ -261,7 +261,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
     // console.log(req.body);
     var {action, account} = req.body;
     // console.log(account, action);
-    const libraryid = "2836051";
+    // const libraryid = "2836051";
     if (action.action == "add-new-paper") {
         let a = new Cite(action.args.doi);
         let output = JSON.parse(a.format('data'));
@@ -338,7 +338,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             json_obj.extra = "DOI: " + output[0].DOI;
         }
 
-        var new_url = `https://api.zotero.org/groups/${libraryid}/items`;
+        var new_url = `https://api.zotero.org/groups/${action.args.libraryid}/items`;
 
         var result = await fetch(new_url, {
             method: 'post',
@@ -352,6 +352,27 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         // console.log(json_resp);
         return res.json(json_resp);
 
+    } else if (action.action == "add-new-note") {
+
+        var url = "https://api.zotero.org/items/new?itemType=note";        
+        response = await (got(url));
+        // console.log(response);
+        json_obj = JSON.parse(response.body);
+        json_obj.note = action.args.note;
+        json_obj.parentItem = action.args.parent;
+        var new_url = `https://api.zotero.org/groups/${action.args.parent.libraryid}/items`;
+
+        var result = await fetch(new_url, {
+            method: 'post',
+            headers: {
+                'Zotero-API-Key': account.token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify([json_obj])
+        });
+        json_resp = await result.json();
+        // console.log(json_resp);
+        return res.json(json_resp);        
     }
     return res.json({"message":"invalid action"});
 
