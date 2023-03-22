@@ -26,5 +26,12 @@
     "title": "Library ID",
     "optional": false,
     "type": "text"
-  }]
+  },
+  {
+    "id": "librarytype",
+    "title": "Group Library?",
+    "optional": false,
+    "type": "bool"
+  }
+]
 }

@@ -75,15 +75,21 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     }
 
     const {libraryid} = filter;
+    const {librarytype} = filter;
+    if (librarytype) {
+        const prefix = "groups"; 
+    } else {
+        const prefix = "users"
+    }
     const filename = libraryid + "." + account["owner"] + "." + requestedType + ".txt";
     console.log(filename, req.body);
     var synchronizationType = "delta";
 
-    var url = `https://api.zotero.org/groups/${libraryid}/items/top?limit=100&`;
+    var url = `https://api.zotero.org/${prefix}/${libraryid}/items/top?limit=100&`;
     if (requestedType == "tag") {
-        url = `https://api.zotero.org/groups/${libraryid}/items/tags`;
+        url = `https://api.zotero.org/${prefix}/${libraryid}/items/tags`;
     } else if (requestedType == "note") {
-        url = `https://api.zotero.org/groups/${libraryid}/items?itemType=note&`;
+        url = `https://api.zotero.org/${prefix}/${libraryid}/items?itemType=note&`;
     }
 
     if (pagination != null && pagination["link"] != null) {
@@ -110,7 +116,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         for (item of JSON.parse(response.body)) {
             data = item.data;
             // console.log(item.key);
-            data.bibtex = (await got(`https://api.zotero.org/groups/${libraryid}/items/${item.key}?format=bibtex`)).body;
+            data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`)).body;
             data.id = uuid(JSON.stringify(item.key));
             data.name = data.title;
             data.link = item.links.alternate.href;
@@ -262,6 +268,13 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
     var {action, account} = req.body;
     // console.log(account, action);
     // const libraryid = "2836051";
+
+    if (action.args.librarytype) {
+        const prefix = "groups";
+    } else {
+        const prefix = "users";        
+    }
+
     if (action.action == "add-new-paper") {
         let a = new Cite(action.args.doi);
         let output = JSON.parse(a.format('data'));
@@ -338,7 +351,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             json_obj.extra = "DOI: " + output[0].DOI;
         }
 
-        var new_url = `https://api.zotero.org/groups/${action.args.libraryid}/items`;
+        var new_url = `https://api.zotero.org/${prefix}/${action.args.libraryid}/items`;
 
         var result = await fetch(new_url, {
             method: 'post',
@@ -360,7 +373,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         json_obj = JSON.parse(response.body);
         json_obj.note = action.args.note;
         json_obj.parentItem = action.args.parent;
-        var new_url = `https://api.zotero.org/groups/${action.args.parent.libraryid}/items`;
+        var new_url = `https://api.zotero.org/${prefix}/${action.args.parent.libraryid}/items`;
         console.log(json_obj);
         var result = await fetch(new_url, {
             method: 'post',
