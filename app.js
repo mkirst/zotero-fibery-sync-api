@@ -76,11 +76,10 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
     const {libraryid} = filter;
     const {librarytype} = filter;
+    var prefix = "users";
     if (librarytype) {
-        const prefix = "groups"; 
-    } else {
-        const prefix = "users"
-    }
+        prefix = "groups"; 
+    } 
     const filename = libraryid + "." + account["owner"] + "." + requestedType + ".txt";
     console.log(filename, req.body);
     var synchronizationType = "delta";
@@ -269,10 +268,9 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
     // console.log(account, action);
     // const libraryid = "2836051";
 
+    var prefix = "users";
     if (action.args.librarytype) {
-        const prefix = "groups";
-    } else {
-        const prefix = "users";        
+        prefix = "groups";
     }
 
     if (action.action == "add-new-paper") {
