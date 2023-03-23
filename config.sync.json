@@ -30,7 +30,7 @@
   {
     "id": "librarytype",
     "title": "Group Library?",
-    "optional": false,
+    "optional": true,
     "type": "bool"
   }
 ]
