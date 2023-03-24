@@ -137,7 +137,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             // console.log(item.key);
             data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`, req_opts)).body;
             if (typeof JSON.stringify(item.key) !== "string") {
-                console.log(item.key);
+                console.log("Item has no key:", item);
                 continue;
             }
             data.id = uuid(JSON.stringify(item.key));
@@ -149,7 +149,11 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 if (a.creatorType != "author") {
                     continue;
                 }
-                a.firstName = a.firstName.split(" ")[0];
+                if (a.firstName === undefined) {
+                    a.firstName = "NA";
+                } else {
+                    a.firstName = a.firstName.split(" ")[0];
+                }
                 a.name = a.firstName + " " + a.lastName;
                 a.id = uuid(JSON.stringify(a.name));
                 data.authorId.push(a.id);
@@ -180,7 +184,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         for (item of JSON.parse(response.body)) {
             
             if (!isIterable(item.data.creators)) {
-                console.log("Creators: ", item.data.creators);
+                console.log("Creators not iterable: ", item);
                 continue;
             }
             for (a of item.data.creators) {
