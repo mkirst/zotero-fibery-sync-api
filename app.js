@@ -87,7 +87,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         prefix = "groups"; 
     } 
     const filename = libraryid + "." + account["owner"] + "." + requestedType + ".txt";
-    console.log(filename, req.body);
+    // console.log(filename, req.body);
     var synchronizationType = "delta";
 
     var url = `https://api.zotero.org/${prefix}/${libraryid}/items/top?limit=100&`;
@@ -160,6 +160,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         // items = {};
 
         for (item of JSON.parse(response.body)) {
+            console.log(item.data.creators);
             for (a of item.data.creators) {
                 if (a.creatorType != "author") {
                     continue;
@@ -377,12 +378,12 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
 
         var url = "https://api.zotero.org/items/new?itemType=note";        
         response = await (got(url, req_opts));
-        console.log(response);
+        // console.log(response);
         json_obj = JSON.parse(response.body);
         json_obj.note = action.args.note;
         json_obj.parentItem = action.args.parent;
         var new_url = `https://api.zotero.org/${prefix}/${action.args.parent.libraryid}/items`;
-        console.log(json_obj);
+        // console.log(json_obj);
         var result = await fetch(new_url, {
             method: 'post',
             headers: {
