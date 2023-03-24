@@ -135,7 +135,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         for (item of JSON.parse(response.body)) {
             data = item.data;
             // console.log(item.key);
-            if (typeof JSON.stringify(item.key) !== "string") {
+            if (!("key" in item) || (typeof JSON.stringify(item.key) !== "string")) {
                 console.log("Item has no key:", item);
                 continue;
             }
