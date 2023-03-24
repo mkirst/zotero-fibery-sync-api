@@ -138,7 +138,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 console.log("Item has no key:", item);
                 continue;                
             }
-            if (typeof JSON.stringify(item.key) !== "string") {
+            if (typeof JSON.stringify(item.key) !== `string`) {
                 console.log("Item key not a string:", item);
                 continue;
             }
