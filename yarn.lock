@@ -668,14 +668,6 @@
   dependencies:
     "node-fetch" "~2.6.1"
 
-"fibery-unofficial@^0.1.1":
-  "integrity" "sha512-/lDqrj6P+QGQLUZvSGPlX+MmOYs41hlfxSdTBEDdpw8pd8T8Vp6xklvXTBurGTdjIX4hGmikQ+JaERcqefbDcw=="
-  "resolved" "https://registry.npmjs.org/fibery-unofficial/-/fibery-unofficial-0.1.1.tgz"
-  "version" "0.1.1"
-  dependencies:
-    "request-promise-native" "^1.0.7"
-    "uuid" "^3.3.2"
-
 "fill-range@^7.0.1":
   "integrity" "sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ=="
   "resolved" "https://registry.npmjs.org/fill-range/-/fill-range-7.0.1.tgz"
