@@ -150,7 +150,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             try {
                 data.id = uuid(JSON.stringify(item.key));
             } catch(error) {
-                console.log(error, item)
+                console.log(error, item);
+                continue;
             }
             data.name = data.title;
             data.link = item.links.alternate.href;
