@@ -32,17 +32,17 @@ app.post(`/validate`, wrap(async (req, res) => {
 
     if (req.body.fields != null && req.body.fields.token != null) {
         response = await got(`https://api.zotero.org/keys/${req.body.fields.token}`);
-        const user = response.body.username;
-        console.log(response);
-        if (user) {
+        body = JSON.parse(response.body);
+        const user = body.username;
+         if (user) {
             return res.json({
-                name: user,
+                name: `${user} (${req.body.id})`,
             });
         }
     }
 
 
-    return res.json({name: req.body.id + req.body});
+    return res.json({name: req.body.id});
 }));
 
 app.get(`/api/v1/synchronizer/clearcache`, (req, res) => {
@@ -67,6 +67,10 @@ app.post(`/api/v1/synchronizer/schema`, (req, res) => res.json(schema));
 
 app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     var {requestedType, filter, pagination, account} = req.body;
+    var req_opts = {headers: {
+                                "Zotero-API-Key" : account.token
+                             }
+                    };
     
     if (_.isEmpty(filter.libraryid)) {
         throw new Error(`Library ID must be specified`);
@@ -110,14 +114,14 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     }
 
     var items = [];
-    response = await (got(url));
+    response = await (got(url, req_opts));
     // console.log(response.body);
         
     if (requestedType == `literature`) {
         for (item of JSON.parse(response.body)) {
             data = item.data;
             // console.log(item.key);
-            data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`)).body;
+            data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`, req_opts)).body;
             data.id = uuid(JSON.stringify(item.key));
             data.name = data.title;
             data.link = item.links.alternate.href;
@@ -267,8 +271,12 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
     // console.log(req.body);
     var {action, account} = req.body;
-    // console.log(account, action);
-    // const libraryid = "2836051";
+
+    var req_opts = {headers: {
+        "Zotero-API-Key" : account.token
+     }
+    };
+
 
     var prefix = "users";
     if (action.args.librarytype) {
@@ -289,7 +297,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             url += "report";
         }
         
-        response = await (got(url));
+        response = await (got(url, req_opts));
         // console.log(response);
         json_obj = JSON.parse(response.body);
         json_obj.title = output[0].title;
@@ -368,7 +376,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
     } else if (action.action == "add-new-note") {
 
         var url = "https://api.zotero.org/items/new?itemType=note";        
-        response = await (got(url));
+        response = await (got(url, req_opts));
         console.log(response);
         json_obj = JSON.parse(response.body);
         json_obj.note = action.args.note;
