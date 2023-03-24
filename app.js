@@ -135,11 +135,11 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         for (item of JSON.parse(response.body)) {
             data = item.data;
             // console.log(item.key);
-            data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`, req_opts)).body;
             if (typeof JSON.stringify(item.key) !== "string") {
                 console.log("Item has no key:", item);
                 continue;
             }
+            data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`, req_opts)).body;
             data.id = uuid(JSON.stringify(item.key));
             data.name = data.title;
             data.link = item.links.alternate.href;
@@ -186,7 +186,6 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         for (item of JSON.parse(response.body)) {
             
             if (!("creators" in item.data)) {
-                console.log("Creators not iterable: ", item);
                 continue;
             }
             for (a of item.data.creators) {
