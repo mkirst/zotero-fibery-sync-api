@@ -29,10 +29,11 @@ const appConfig = require(`./config.app.json`);
 app.get(`/`, (req, res) => res.json(appConfig));
 
 app.post(`/validate`, wrap(async (req, res) => {
-    console.log(req);
+
     if (req.body.fields != null && req.body.fields.token != null) {
         response = await got(`https://api.zotero.org/keys/${req.body.fields.token}`);
         const user = response.body.username;
+        console.log(response);
         if (user) {
             return res.json({
                 name: user,
@@ -41,7 +42,7 @@ app.post(`/validate`, wrap(async (req, res) => {
     }
 
 
-    return res.json({name: `Public`});
+    return res.json({name: req.body.id + req.body});
 }));
 
 app.get(`/api/v1/synchronizer/clearcache`, (req, res) => {
