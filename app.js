@@ -17,6 +17,20 @@ app.use(logger(`dev`));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
+
+/**
+ * Determine whether the given `input` is iterable.
+ *
+ * @returns {Boolean}
+ */
+function isIterable(input) {  
+    if (input === null || input === undefined) {
+      return false
+    }
+  
+    return typeof input[Symbol.iterator] === 'function'
+  }
+
 // Uncomment to print out contents of requests
 // app.use(function (req, res, next) {
 //     console.log("Res: ", res);
@@ -122,7 +136,10 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             data = item.data;
             // console.log(item.key);
             data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`, req_opts)).body;
-            console.log(item);
+            if (typeof JSON.stringify(item.key) !== "string") {
+                console.log(item.key);
+                continue;
+            }
             data.id = uuid(JSON.stringify(item.key));
             data.name = data.title;
             data.link = item.links.alternate.href;
@@ -161,7 +178,11 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         // items = {};
 
         for (item of JSON.parse(response.body)) {
-            console.log(item.data.creators);
+            
+            if (!isIterable(item.data.creators)) {
+                console.log("Creators: ", item.data.creators);
+                continue;
+            }
             for (a of item.data.creators) {
                 if (a.creatorType != "author") {
                     continue;
