@@ -14,7 +14,6 @@
     "citation-js": "^0.6.4",
     "express": "^4.18.2",
     "express-async-wrap": "^1.0.0",
-    "fibery-unofficial": "^0.1.1",
     "glob": "8.0.3",
     "got": "^11.8.3",
     "lodash": "^4.17.21",
