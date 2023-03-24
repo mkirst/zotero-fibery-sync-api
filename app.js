@@ -142,6 +142,10 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 console.log("Item key not a string:", item);
                 continue;
             }
+            if (typeof JSON.stringify(item.key) === undefined) {
+                console.log("Item key undefined:", item);
+                continue;
+            }
             data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`, req_opts)).body;
             data.id = uuid(JSON.stringify(item.key));
             data.name = data.title;
@@ -269,6 +273,20 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
         for (item of JSON.parse(response.body)) {
             data = item.data;
+
+            if (!("key" in data)) {
+                console.log("data has no key:", data);
+                continue;                
+            }
+            if (typeof JSON.stringify(data.key) !== "string") {
+                console.log("data key not a string:", data);
+                continue;
+            }
+            if (typeof JSON.stringify(data.key) === undefined) {
+                console.log("data key undefined:", data);
+                continue;
+            }
+
             data.name = data.key;
             data.id = uuid(JSON.stringify(data.key));
             data.literatureId = uuid(JSON.stringify(data.parentItem));
