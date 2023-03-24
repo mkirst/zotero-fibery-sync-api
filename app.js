@@ -112,6 +112,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     }
 
     if (pagination != null && pagination["link"] != null) {
+        console.log("using pagination link ", pagination["link"], "for type", requestedType)
         url = pagination["link"];
         synchronizationType = pagination["synchronizationType"];
     } else if (pagination == null) {
