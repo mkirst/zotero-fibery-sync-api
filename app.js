@@ -134,7 +134,6 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     if (requestedType == `literature`) {
         for (item of JSON.parse(response.body)) {
             data = item.data;
-            // console.log(item.key);
             if (!("key" in item)) {
                 console.log("Item has no key:", item);
                 continue;                
