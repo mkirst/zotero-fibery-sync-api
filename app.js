@@ -145,18 +145,20 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             data.link = item.links.alternate.href;
             data.key = item.key;
             data.authorId = [];
-            for (a of data.creators) {
-                if (a.creatorType != "author") {
-                    continue;
+            if ("creators" in data) {
+                for (a of data.creators) {
+                    if (a.creatorType != "author") {
+                        continue;
+                    }
+                    if (a.firstName === undefined) {
+                        a.firstName = "NA";
+                    } else {
+                        a.firstName = a.firstName.split(" ")[0];
+                    }
+                    a.name = a.firstName + " " + a.lastName;
+                    a.id = uuid(JSON.stringify(a.name));
+                    data.authorId.push(a.id);
                 }
-                if (a.firstName === undefined) {
-                    a.firstName = "NA";
-                } else {
-                    a.firstName = a.firstName.split(" ")[0];
-                }
-                a.name = a.firstName + " " + a.lastName;
-                a.id = uuid(JSON.stringify(a.name));
-                data.authorId.push(a.id);
             }
             if ("publicationTitle" in data) {
                 data.venueId = uuid(JSON.stringify(data.publicationTitle));
@@ -183,7 +185,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
         for (item of JSON.parse(response.body)) {
             
-            if (!isIterable(item.data.creators)) {
+            if (!("creators" in item.data)) {
                 console.log("Creators not iterable: ", item);
                 continue;
             }
@@ -191,7 +193,11 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 if (a.creatorType != "author") {
                     continue;
                 }
-                a.firstName = a.firstName.split(" ")[0];
+                if (a.firstName === undefined) {
+                    a.firstName = "NA";
+                } else {
+                    a.firstName = a.firstName.split(" ")[0];
+                }
                 a.name = a.firstName + " " + a.lastName;
                 a.id = uuid(JSON.stringify(a.name));
                 a.__syncAction = "SET";
