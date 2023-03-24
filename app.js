@@ -122,6 +122,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             data = item.data;
             // console.log(item.key);
             data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`, req_opts)).body;
+            console.log(item);
             data.id = uuid(JSON.stringify(item.key));
             data.name = data.title;
             data.link = item.links.alternate.href;
