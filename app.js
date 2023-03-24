@@ -135,8 +135,12 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         for (item of JSON.parse(response.body)) {
             data = item.data;
             // console.log(item.key);
-            if (!("key" in item) || (typeof JSON.stringify(item.key) !== "string")) {
+            if (!("key" in item)) {
                 console.log("Item has no key:", item);
+                continue;                
+            }
+            if (typeof JSON.stringify(item.key) !== "string") {
+                console.log("Item key not a string:", item);
                 continue;
             }
             data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`, req_opts)).body;
