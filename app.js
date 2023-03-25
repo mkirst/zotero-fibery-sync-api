@@ -80,8 +80,8 @@ const schema = require(`./schema.json`);
 app.post(`/api/v1/synchronizer/schema`, (req, res) => res.json(schema));
 
 app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
-    var {requestedType, filter, pagination, account} = req.body;
-    var req_opts = {headers: {
+    let {requestedType, filter, pagination, account} = req.body;
+    const req_opts = {headers: {
                                 "Zotero-API-Key" : account.token
                              }
                     };
@@ -96,15 +96,15 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
     const {libraryid} = filter;
     const {librarytype} = filter;
-    var prefix = "users";
+    let prefix = "users";
     if (librarytype) {
         prefix = "groups"; 
     } 
     const filename = libraryid + "." + account["owner"] + "." + requestedType + ".txt";
     // console.log(filename, req.body);
-    var synchronizationType = "delta";
+    let synchronizationType = "delta";
 
-    var url = `https://api.zotero.org/${prefix}/${libraryid}/items/top?limit=100&`;
+    let url = `https://api.zotero.org/${prefix}/${libraryid}/items/top?limit=100&`;
     if (requestedType == "tag") {
         url = `https://api.zotero.org/${prefix}/${libraryid}/items/tags`;
     } else if (requestedType == "note") {
@@ -128,13 +128,13 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
           }
     }
 
-    var items = [];
-    var response = await (got(url, req_opts));
+    let items = [];
+    let response = await (got(url, req_opts));
     // console.log(response.body);
         
     if (requestedType == `literature`) {
-        for (item of JSON.parse(response.body)) {
-            data = item.data;
+        for (const item of JSON.parse(response.body)) {
+            const data = item.data;
             if (!("key" in item)) {
                 console.log("Item has no key:", item);
                 continue;                
@@ -143,8 +143,12 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 console.log("Item key not a string:", item);
                 continue;
             }
-            if (typeof JSON.stringify(item.key) === undefined) {
+            if (typeof item.key === undefined) {
                 console.log("Item key undefined:", item);
+                continue;
+            }
+            if (typeof JSON.stringify(item.key) === undefined) {
+                console.log("Item key string undefined:", item);
                 continue;
             }
             data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`, req_opts)).body;
@@ -196,7 +200,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     } else if (requestedType == `author`) {
         // items = {};
 
-        for (item of JSON.parse(response.body)) {
+        for (const item of JSON.parse(response.body)) {
             
             if (!("creators" in item.data)) {
                 continue;
@@ -222,10 +226,10 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     } else if (requestedType == `venue`) {
         items = {};
 
-        for (item of JSON.parse(response.body)) {
-            data = item.data;
-            var venuename;
-            var venuetype;
+        for (const item of JSON.parse(response.body)) {
+            const data = item.data;
+            let venuename;
+            let venuetype;
             if ("publicationTitle" in data) {
                 venuename = data.publicationTitle;
                 venuetype = "journal";
@@ -263,7 +267,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         // items = [...new Map(items.map((m) => [m.id, m])).values()];
     } else if (requestedType == `tag`) {
 
-        for (item of JSON.parse(response.body)) {
+        for (const item of JSON.parse(response.body)) {
 
             item.name = item.tag;
 
@@ -277,8 +281,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         }
     } else if (requestedType == `note`) {
 
-        for (item of JSON.parse(response.body)) {
-            data = item.data;
+        for (const item of JSON.parse(response.body)) {
+            const data = item.data;
 
             if (!("key" in data)) {
                 console.log("data has no key:", data);
@@ -303,7 +307,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         }
     }
 
-    var parsed = parse(response.headers.link);
+    let parsed = parse(response.headers.link);
 
     pagination["hasNext"] = parsed["next"] != null;
     if (pagination["hasNext"]) {
@@ -329,15 +333,15 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
 app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
     // console.log(req.body);
-    var {action, account} = req.body;
+    let {action, account} = req.body;
 
-    var req_opts = {headers: {
+    let req_opts = {headers: {
         "Zotero-API-Key" : account.token
      }
     };
 
 
-    var prefix = "users";
+    let prefix = "users";
     if (action.args.librarytype) {
         prefix = "groups";
     }
@@ -346,7 +350,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         let a = new Cite(action.args.doi);
         let output = JSON.parse(a.format('data'));
         
-        var url = "https://api.zotero.org/items/new?itemType=";
+        let url = "https://api.zotero.org/items/new?itemType=";
         
         if (output[0].type == "article-journal") {
             url += "journalArticle";
@@ -394,7 +398,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             json_obj.ISBN = output[0].ISBN;
         }
 
-        var counter = 0;
+        let counter = 0;
         for (author of output[0].author) {
             new_author = JSON.parse(JSON.stringify(json_obj.creators[0]));
             new_author.firstName = author.given;
@@ -418,9 +422,9 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             json_obj.extra = "DOI: " + output[0].DOI;
         }
 
-        var new_url = `https://api.zotero.org/${prefix}/${action.args.libraryid}/items`;
+        const new_url = `https://api.zotero.org/${prefix}/${action.args.libraryid}/items`;
 
-        var result = await fetch(new_url, {
+        const result = await fetch(new_url, {
             method: 'post',
             headers: {
                 'Zotero-API-Key': account.token,
@@ -434,15 +438,15 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
 
     } else if (action.action == "add-new-note") {
 
-        var url = "https://api.zotero.org/items/new?itemType=note";        
+        const url = "https://api.zotero.org/items/new?itemType=note";        
         response = await (got(url, req_opts));
         // console.log(response);
         json_obj = JSON.parse(response.body);
         json_obj.note = action.args.note;
         json_obj.parentItem = action.args.parent;
-        var new_url = `https://api.zotero.org/${prefix}/${action.args.parent.libraryid}/items`;
+        const new_url = `https://api.zotero.org/${prefix}/${action.args.parent.libraryid}/items`;
         // console.log(json_obj);
-        var result = await fetch(new_url, {
+        const result = await fetch(new_url, {
             method: 'post',
             headers: {
                 'Zotero-API-Key': account.token,
