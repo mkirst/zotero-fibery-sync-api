@@ -129,7 +129,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     }
 
     var items = [];
-    response = await (got(url, req_opts));
+    var response = await (got(url, req_opts));
     // console.log(response.body);
         
     if (requestedType == `literature`) {
@@ -151,7 +151,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             try {
                 data.id = uuid(JSON.stringify(item.key));
             } catch(error) {
-                console.log(error, item, requestedType, url);
+                console.log(error, item, requestedType, url, JSON.parse(response.body)[0]);
                 continue;
             }
             data.name = data.title;
