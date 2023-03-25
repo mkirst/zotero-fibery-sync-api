@@ -151,7 +151,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             try {
                 data.id = uuid(JSON.stringify(item.key));
             } catch(error) {
-                console.log(error, item, requestedType, url, JSON.parse(response.body)[0]);
+                console.log(error, item, requestedType, url, item.key, JSON.stringify(item.key));
                 continue;
             }
             data.name = data.title;
