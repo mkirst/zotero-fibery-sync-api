@@ -17,7 +17,7 @@ function processAuthor(a) {
     a.id = uuid(JSON.stringify(a.name));
 }
 
-function processLiterature(data) {
+function processLiterature(data, item) {
     data.name = data.title;
     data.link = item.links.alternate.href;
     data.key = item.key;

@@ -119,7 +119,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 console.log(error, item, requestedType, url, item.key, JSON.stringify(item.key));
                 continue;
             }
-            processLiterature(data);
+            processLiterature(data, item);
             items.push(data);
         };
     } else if (requestedType == `author`) {
