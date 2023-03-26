@@ -80,6 +80,10 @@
         "name": "First Name",
         "type": "text"
       },
+      "middleName": {
+        "name": "Middle Name",
+        "type": "text"
+      },
       "lastName": {
         "name": "Last Name",
         "type": "text"

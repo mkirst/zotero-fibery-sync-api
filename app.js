@@ -7,29 +7,14 @@ const uuid = require(`uuid-by-string`);
 const got = require(`got`);
 var parse = require('parse-link-header');
 const fs = require('fs');
-var glob = require("glob")
 const Cite = require('citation-js')
 const fetch = (url) => import('node-fetch').then(({default: fetch}) => fetch(url));
-
+const { processAuthor, processLiterature, processNote, processTag, populateJSONObj } = require('./utils');
 
 const app = express();
 app.use(logger(`dev`));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-
-
-/**
- * Determine whether the given `input` is iterable.
- *
- * @returns {Boolean}
- */
-function isIterable(input) {  
-    if (input === null || input === undefined) {
-      return false
-    }
-  
-    return typeof input[Symbol.iterator] === 'function'
-  }
 
 // Uncomment to print out contents of requests
 // app.use(function (req, res, next) {
@@ -55,32 +40,18 @@ app.post(`/validate`, wrap(async (req, res) => {
         }
     }
 
-
     return res.json({name: req.body.id});
 }));
-
-app.get(`/api/v1/synchronizer/clearcache`, (req, res) => {
-    glob("**/*.literature.txt", function (er, files) {
-        for (const file of files) {
-            fs.unlinkSync(file);
-        }
-    });
-    glob("**/*.author.txt", function (er, files) {
-        for (const file of files) {
-            fs.unlinkSync(file);
-        }
-    });
-
-});
 
 const syncConfig = require(`./config.sync.json`);
 app.post(`/api/v1/synchronizer/config`, (req, res) => res.json(syncConfig));
 
 const schema = require(`./schema.json`);
+
 app.post(`/api/v1/synchronizer/schema`, (req, res) => res.json(schema));
 
 app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
-    let {requestedType, filter, pagination, account} = req.body;
+    let {requestedType, filter, pagination, account, lastSynchronizedAt} = req.body;
     const req_opts = {headers: {
                                 "Zotero-API-Key" : account.token
                              }
@@ -100,8 +71,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     if (librarytype) {
         prefix = "groups"; 
     } 
-    const filename = libraryid + "." + account["owner"] + "." + requestedType + ".txt";
-    // console.log(filename, req.body);
+    const filename = libraryid + "." + account["_id"] + "." + requestedType + ".txt";
+
     let synchronizationType = "delta";
 
     let url = `https://api.zotero.org/${prefix}/${libraryid}/items/top?limit=100&`;
@@ -117,20 +88,22 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         synchronizationType = pagination["synchronizationType"];
     } else if (pagination == null) {
         pagination = {};
-        try {
-            const version = fs.readFileSync(path.resolve(__dirname, filename), 'utf8');
-            console.log(version);
-            url += `?since=${version}`;
-          } catch (err) {
-            // console.error(err);
-            console.log("File does not exist");
+        if (lastSynchronizedAt == null) {
             synchronizationType = "full";
-          }
+        } else {
+            try {
+                const version = fs.readFileSync(path.resolve(__dirname, filename), 'utf8');
+                console.log(version);
+                url += `?since=${version}`;
+            } catch (err) {
+                console.log("File does not exist");
+                synchronizationType = "full";
+            }
+        }
     }
 
     let items = [];
     let response = await (got(url, req_opts));
-    // console.log(response.body);
         
     if (requestedType == `literature`) {
         for (const item of JSON.parse(response.body)) {
@@ -139,18 +112,6 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 console.log("Item has no key:", item);
                 continue;                
             }
-            if (typeof JSON.stringify(item.key) !== `string`) {
-                console.log("Item key not a string:", item);
-                continue;
-            }
-            if (typeof item.key === undefined) {
-                console.log("Item key undefined:", item);
-                continue;
-            }
-            if (typeof JSON.stringify(item.key) === undefined) {
-                console.log("Item key string undefined:", item);
-                continue;
-            }
             data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`, req_opts)).body;
             try {
                 data.id = uuid(JSON.stringify(item.key));
@@ -158,47 +119,10 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 console.log(error, item, requestedType, url, item.key, JSON.stringify(item.key));
                 continue;
             }
-            data.name = data.title;
-            data.link = item.links.alternate.href;
-            data.key = item.key;
-            data.authorId = [];
-            if ("creators" in data) {
-                for (a of data.creators) {
-                    if (a.creatorType != "author") {
-                        continue;
-                    }
-                    if (a.firstName === undefined) {
-                        a.firstName = "NA";
-                    } else {
-                        a.firstName = a.firstName.split(" ")[0];
-                    }
-                    a.name = a.firstName + " " + a.lastName;
-                    a.id = uuid(JSON.stringify(a.name));
-                    data.authorId.push(a.id);
-                }
-            }
-            if ("publicationTitle" in data) {
-                data.venueId = uuid(JSON.stringify(data.publicationTitle));
-            } else if ("conferenceName" in data && data.conferenceName != "") {
-                data.venueId = uuid(JSON.stringify(data.conferenceName));
-            } else if ("proceedingsTitle" in data) {
-                data.venueId = uuid(JSON.stringify(data.proceedingsTitle));
-            } else if ("bookTitle" in data) {
-                data.venueId = uuid(JSON.stringify(data.bookTitle));
-            } else {
-                data.venueId = uuid(JSON.stringify(data.itemType));
-            }
-
-            data.tagId = [];
-            for (a of data.tags) {
-                a.id = uuid(JSON.stringify(a.tag));
-                data.tagId.push(a.id);
-            }
-            data.__syncAction = "SET";
+            processLiterature(data);
             items.push(data);
         };
     } else if (requestedType == `author`) {
-        // items = {};
 
         for (const item of JSON.parse(response.body)) {
             
@@ -209,13 +133,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 if (a.creatorType != "author") {
                     continue;
                 }
-                if (a.firstName === undefined) {
-                    a.firstName = "NA";
-                } else {
-                    a.firstName = a.firstName.split(" ")[0];
-                }
-                a.name = a.firstName + " " + a.lastName;
-                a.id = uuid(JSON.stringify(a.name));
+                processAuthor(a);
                 a.__syncAction = "SET";
                 items.push(a);
             }
@@ -255,27 +173,14 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 venue.name = venuename;
                 venue.type = venuetype;
                 venue.__syncAction = "SET";
-                // venue.literatureId = [uuid(JSON.stringify(data.key))];
-            } //else {
-                // venue.literatureId.push(uuid(JSON.stringify(data.key)));
-           // }
-
-            // items.push(venue);
-
+            }
         }
-        // Remove duplicates
-        // items = [...new Map(items.map((m) => [m.id, m])).values()];
+
     } else if (requestedType == `tag`) {
 
         for (const item of JSON.parse(response.body)) {
 
-            item.name = item.tag;
-
-            item.id = uuid(JSON.stringify(item.name));
-            item.type = item.meta.type;
-            item.link = item.links.alternate.href;
-
-            item.__syncAction = "SET";
+            processTag(item);
             items.push(item);
 
         }
@@ -288,21 +193,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 console.log("data has no key:", data);
                 continue;                
             }
-            if (typeof JSON.stringify(data.key) !== "string") {
-                console.log("data key not a string:", data);
-                continue;
-            }
-            if (typeof JSON.stringify(data.key) === undefined) {
-                console.log("data key undefined:", data);
-                continue;
-            }
-
-            data.name = data.key;
-            data.id = uuid(JSON.stringify(data.key));
-            data.literatureId = uuid(JSON.stringify(data.parentItem));
-            data.link = item.links.alternate.href;
-            data.creator = item.meta.createdByUser.name;
-            data.__syncAction = "SET";
+            processNote(data);
             items.push(data);
         }
     }
@@ -326,7 +217,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             // file written successfully
             });
     }
-    // console.log({items, pagination, synchronizationType});
+
     return res.json({items, pagination, synchronizationType});
     
 }));
@@ -339,7 +230,6 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         "Zotero-API-Key" : account.token
      }
     };
-
 
     let prefix = "users";
     if (action.args.librarytype) {
@@ -361,67 +251,8 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         }
         
         response = await (got(url, req_opts));
-        // console.log(response);
         json_obj = JSON.parse(response.body);
-        json_obj.title = output[0].title;
-        json_obj.date = output[0].issued["date-parts"][0][0];
-
-        if ("volume" in json_obj && "volume" in output[0]) {
-            json_obj.volume = output[0].volume;
-        }
-
-        if ("url" in json_obj && "URL" in output[0]) {
-            json_obj.url = output[0].URL;
-        }
-
-        if ("publisher" in json_obj && "publisher" in output[0]) {
-            json_obj.publisher = output[0].publisher;
-        }
-
-        if ("abstractNote" in json_obj && "abstract" in output[0]) {
-            json_obj.abstractNote = output[0].abstract;
-        }
-
-        if ("pages" in json_obj && "page" in output[0]) {
-            json_obj.pages = output[0].page;
-        }
-
-        if ("issue" in json_obj && "issue" in output[0]) {
-            json_obj.issue = output[0].issue;
-        }
-
-        if ("ISSN" in json_obj && "ISSN" in output[0]) {
-            json_obj.ISSN = output[0].ISSN;
-        }
-
-        if ("ISBN" in json_obj && "ISBN" in output[0]) {
-            json_obj.ISBN = output[0].ISBN;
-        }
-
-        let counter = 0;
-        for (author of output[0].author) {
-            new_author = JSON.parse(JSON.stringify(json_obj.creators[0]));
-            new_author.firstName = author.given;
-            new_author.lastName = author.family;
-            if (counter > 1) {
-                json_obj.creators.push(new_author);
-            } else {
-                json_obj.creators[0] = new_author;
-            }
-
-        }
-
-        if (output[0].type == "article-journal") {
-            json_obj.DOI = output[0].DOI;
-            json_obj.publicationTitle = output[0]["container-title"];            
-        } else if (output[0].type == "paper-conference") {
-            json_obj.DOI = output[0].DOI;
-            json_obj.conferenceName = output[0]["event-title"];
-            json_obj.proceedingsTitle = output[0]["container-title"];
-        } else {
-            json_obj.extra = "DOI: " + output[0].DOI;
-        }
-
+        populateJSONObj(json_obj, output);
         const new_url = `https://api.zotero.org/${prefix}/${action.args.libraryid}/items`;
 
         const result = await fetch(new_url, {
@@ -433,19 +264,16 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             body: JSON.stringify([json_obj])
         });
         json_resp = await result.json();
-        // console.log(json_resp);
         return res.json(json_resp);
 
     } else if (action.action == "add-new-note") {
 
         const url = "https://api.zotero.org/items/new?itemType=note";        
         response = await (got(url, req_opts));
-        // console.log(response);
         json_obj = JSON.parse(response.body);
         json_obj.note = action.args.note;
         json_obj.parentItem = action.args.parent;
         const new_url = `https://api.zotero.org/${prefix}/${action.args.parent.libraryid}/items`;
-        // console.log(json_obj);
         const result = await fetch(new_url, {
             method: 'post',
             headers: {
@@ -455,7 +283,6 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             body: JSON.stringify([json_obj])
         });
         json_resp = await result.json();
-        // console.log(json_resp);
         return res.json(json_resp);        
     }
     return res.json({"message":"invalid action"});
