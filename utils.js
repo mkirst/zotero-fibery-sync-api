@@ -131,4 +131,4 @@ function populateJSONObj(json_obj, output) {
 
 }
 
-export {processAuthor, processLiterature, processNote, processTag, populateJSONObj};    
+module.exports = {processAuthor, processLiterature, processNote, processTag, populateJSONObj};    
