@@ -1,6 +1,6 @@
 const uuid = require(`uuid-by-string`);
 
-export function processAuthor(a) {
+function processAuthor(a) {
     if (a.firstName === undefined) {
         a.firstName = "";
         a.middleName = ""
@@ -17,7 +17,7 @@ export function processAuthor(a) {
     a.id = uuid(JSON.stringify(a.name));
 }
 
-export function processLiterature(data) {
+function processLiterature(data) {
     data.name = data.title;
     data.link = item.links.alternate.href;
     data.key = item.key;
@@ -51,7 +51,7 @@ export function processLiterature(data) {
     data.__syncAction = "SET";    
 }
 
-export function processTag(item) {
+function processTag(item) {
     item.name = item.tag;
 
     item.id = uuid(JSON.stringify(item.name));
@@ -61,7 +61,7 @@ export function processTag(item) {
     item.__syncAction = "SET";    
 }
 
-export function processNote(data) {
+function processNote(data) {
     data.name = data.key;
     data.id = uuid(JSON.stringify(data.key));
     data.literatureId = uuid(JSON.stringify(data.parentItem));
@@ -70,7 +70,7 @@ export function processNote(data) {
     data.__syncAction = "SET";    
 }
 
-export function populateJSONObj(json_obj, output) {
+function populateJSONObj(json_obj, output) {
     json_obj.title = output[0].title;
     json_obj.date = output[0].issued["date-parts"][0][0];
 
@@ -130,3 +130,5 @@ export function populateJSONObj(json_obj, output) {
     }
 
 }
+
+export {processAuthor, processLiterature, processNote, processTag, populateJSONObj};    
