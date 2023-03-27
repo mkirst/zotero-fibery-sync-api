@@ -241,7 +241,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 }));
 
 app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
-    console.log(req.body);
+
     let {action, account} = req.body;
 
     let req_opts = {headers: {
@@ -250,7 +250,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
     };
 
     let prefix = "users";
-    if (action.args.librarytype) {
+    if (account.librarytype) {
         prefix = "groups";
     }
 
@@ -274,7 +274,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         }    
         json_obj = JSON.parse(response.body);
         populateJSONObj(json_obj, output);
-        const new_url = `https://api.zotero.org/${prefix}/${action.args.libraryid}/items`;
+        const new_url = `https://api.zotero.org/${prefix}/${account.libraryid}/items`;
 
         const result = await fetch(new_url, {
             method: 'post',
@@ -294,7 +294,6 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         if (await handleBackoff(response.headers) > 0) {
             return res.json({message: "Rate limits exceeded", tryLater:true});
         }
-        console.log(response.body);
         json_obj = response.body;
         json_obj.note = action.args.note;
         json_obj.parentItem = action.args.parent;
@@ -307,7 +306,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             },
             body: JSON.stringify([json_obj])
         });
-        console.log(result);
+
         return res.json(result.json());        
     }
     return res.json({"message":"invalid action"});
