@@ -64,12 +64,9 @@ app.post(`/api/v1/synchronizer/schema`, (req, res) => res.json(schema));
 
 app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     let {requestedType, pagination, account, lastSynchronizedAt} = req.body;
-    let req_opts = {};
+    const req_opts = {headers:{}};
     if (account.auth == "token") {
-        req_opts = {headers: {
-                                "Zotero-API-Key" : account.token
-                             }
-                    };
+        req_opts.headers["Zotero-API-Key"] = account.token;
     }
     
     if (_.isEmpty(account.libraryid)) {
@@ -110,6 +107,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 const version = fs.readFileSync(path.resolve(__dirname, filename), 'utf8');
                 console.log(version);
                 url += `?since=${version}`;
+                req_opts.headers["If-Unmodified-Since-Version"] = version;
             } catch (err) {
                 console.log("File does not exist");
                 synchronizationType = "full";
@@ -119,6 +117,10 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
     let items = [];
     let response = await (got(url, req_opts));
+    if (response.status == 304) {
+        pagination["hasNext"] = false;
+        return res.json({items, pagination, synchronizationType});        
+    }
     if (await handleBackoff(response.headers) > 0) {
         return res.json({message: "Rate limits exceeded", tryLater:true});
     }
