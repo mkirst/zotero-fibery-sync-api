@@ -307,8 +307,8 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             },
             body: JSON.stringify([json_obj])
         });
-        json_resp = await result.json();
-        return res.json(json_resp);        
+        console.log(result);
+        return res.json(result.json());        
     }
     return res.json({"message":"invalid action"});
 
