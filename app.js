@@ -292,15 +292,15 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
     } else if (action.action == "add-new-note") {
 
         const url = "https://api.zotero.org/items/new?itemType=note";        
-        response = await (got(url, req_opts));
+        const response = await (got(url, req_opts));
         if (await handleBackoff(response.headers) > 0) {
             return res.json({message: "Rate limits exceeded", tryLater:true});
         }
-        json_obj = JSON.parse(response.body);
+        const json_obj = JSON.parse(response.body);
         json_obj.note = action.args.note;
         json_obj.parentItem = action.args.parent;
         const new_url = `https://api.zotero.org/${prefix}/${account.libraryid}/items`;
-        console.log(new_url, json_obj);
+        console.log(new_url, json_obj, action);
         const result = await fetch(new_url, {
             method: "POST",
             headers: {
