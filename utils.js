@@ -66,7 +66,12 @@ function processNote(data, item) {
     data.id = uuid(JSON.stringify(data.key));
     data.literatureId = uuid(JSON.stringify(data.parentItem));
     data.link = item.links.alternate.href;
-    data.creator = item.meta.createdByUser.name;
+    if ("createdByUser" in item.meta) {
+        data.creator = item.meta.createdByUser.name;
+    } else {
+        data.creator = "";
+    }
+
     data.__syncAction = "SET";    
 }
 
@@ -131,4 +136,12 @@ function populateJSONObj(json_obj, output) {
 
 }
 
-module.exports = {processAuthor, processLiterature, processNote, processTag, populateJSONObj};    
+const wait = (ms) => new Promise((res) => setTimeout(res, ms));
+
+async function handleBackoff(header) {
+    if ("Backoff" in header) {
+        await wait(header.Backoff);
+    }
+}
+
+module.exports = {processAuthor, processLiterature, processNote, processTag, populateJSONObj, handleBackoff};    

@@ -82,8 +82,18 @@
       "action": "add-new-note",
       "name": "Add new note to Zotero library",
       "args": [
-        {"id":"note", "name":"Note Text", "type":"text"},
-        {"id":"parent", "name":"Literature Item ID", "type":"text"}              
+        {
+          "id":"note", 
+          "name":"Note Text", 
+          "type":"textArea",
+          "description":"The contents of the note you would like to add"
+        },
+        {
+          "id":"parent", 
+          "name":"Literature Item ID", 
+          "type":"text",
+          "description":"Zotero key of the literature item this is a note for"
+        }              
       ]
     }
   ]
