@@ -10,6 +10,13 @@
       "description": "There is no any authentication required",
       "fields": [
         {   
+            "id":"connectionname", 
+            "title":"Name",
+            "description": "Human-readable name for this configuration (e.g. which library is this)",
+            "type":"text",
+            "optional":true
+        },
+        {   
           "id":"libraryid", 
           "title":"Library ID",
           "description": "ID of the zotero library you'd like to sync; use your userID to sync your personal library",
@@ -20,12 +27,6 @@
             "title":"Group Library?",
             "description": "Check this box if the library you'd like to sync is a group library",
             "type":"bool"
-        },
-        {   
-            "id":"connectionname", 
-            "title":"Name",
-            "description": "Human-readable name for this configuration (e.g. which library is this)",
-            "type":"text"
         }
       ]
     },
@@ -34,11 +35,12 @@
       "name": "Token Authentication",
       "id": "token",
       "fields": [
-          {
-              "type": "text",
-              "title": "Personal Token",
-              "description": "Zotero private key (create one at https://www.zotero.org/settings/keys/new)",
-              "id": "token"
+          {   
+            "id":"connectionname", 
+            "title":"Name",
+            "description": "Human-readable name for this configuration (e.g. which library is this)",
+            "type":"text",
+            "optional":true
           },
           {   
               "id":"libraryid", 
@@ -52,11 +54,11 @@
               "description": "Check this box if the library you'd like to sync is a group library",
               "type":"bool"
           },
-          {   
-              "id":"connectionname", 
-              "title":"Name",
-              "description": "Human-readable name for this configuration (e.g. which library is this)",
-              "type":"text"
+          {
+            "type": "text",
+            "title": "Personal Token",
+            "description": "Zotero private key (create one at https://www.zotero.org/settings/keys/new)",
+            "id": "token"
           }
       ]
     }
