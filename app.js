@@ -294,7 +294,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         if (await handleBackoff(response.headers) > 0) {
             return res.json({message: "Rate limits exceeded", tryLater:true});
         }
-        json_obj = response.body;
+        json_obj = JSON.parse(response.body);
         json_obj.note = action.args.note;
         json_obj.parentItem = action.args.parent;
         const new_url = `https://api.zotero.org/${prefix}/${action.args.parent.libraryid}/items`;
@@ -306,7 +306,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             },
             body: JSON.stringify([json_obj])
         });
-
+        console.log(result);
         return res.json(result.json());        
     }
     return res.json({"message":"invalid action"});
