@@ -34,6 +34,12 @@ app.post(`/validate`, wrap(async (req, res) => {
         body = JSON.parse(response.body);
         const user = body.username;
          if (user) {
+            if (req.body.fields.connectionname) {
+                return res.json({
+                    name: `${req.body.fields.connectionname} (username: ${user}) (${req.body.id})`,
+                });
+                    
+            }
             return res.json({
                 name: `${user} (${req.body.id})`,
             });
@@ -51,13 +57,16 @@ const schema = require(`./schema.json`);
 app.post(`/api/v1/synchronizer/schema`, (req, res) => res.json(schema));
 
 app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
-    let {requestedType, filter, pagination, account, lastSynchronizedAt} = req.body;
-    const req_opts = {headers: {
+    let {requestedType, pagination, account, lastSynchronizedAt} = req.body;
+    let req_opts = {};
+    if (account.auth == "token") {
+        req_opts = {headers: {
                                 "Zotero-API-Key" : account.token
                              }
                     };
+    }
     
-    if (_.isEmpty(filter.libraryid)) {
+    if (_.isEmpty(account.libraryid)) {
         throw new Error(`Library ID must be specified`);
     }
 
@@ -65,8 +74,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         throw new Error(`Only literature and author databases can be synchronized`);
     }
 
-    const {libraryid} = filter;
-    const {librarytype} = filter;
+    const {libraryid} = account;
+    const {librarytype} = account;
     let prefix = "users";
     if (librarytype) {
         prefix = "groups"; 

@@ -21,17 +21,5 @@
       "name": "Note"
     }
   ],
-  "filters" : [{
-    "id": "libraryid",
-    "title": "Library ID",
-    "optional": false,
-    "type": "text"
-  },
-  {
-    "id": "librarytype",
-    "title": "Group Library?",
-    "optional": true,
-    "type": "bool"
-  }
-]
+  "filters" : []
 }

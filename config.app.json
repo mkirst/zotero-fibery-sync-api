@@ -8,7 +8,26 @@
       "id": "public",
       "name": "Public Access",
       "description": "There is no any authentication required",
-      "fields": []
+      "fields": [
+        {   
+          "id":"libraryid", 
+          "title":"Library ID",
+          "description": "ID of the zotero library you'd like to sync; use your userID to sync your personal library",
+          "type":"text"
+        },
+        {   
+            "id":"librarytype", 
+            "title":"Group Library?",
+            "description": "Check this box if the library you'd like to sync is a group library",
+            "type":"bool"
+        },
+        {   
+            "id":"connectionname", 
+            "title":"Name",
+            "description": "Human-readable name for this configuration (e.g. which library is this)",
+            "type":"text"
+        }
+      ]
     },
     {
       "description": "Provide Token",
@@ -17,8 +36,27 @@
       "fields": [
           {
               "type": "text",
-              "description": "Personal Token",
+              "title": "Personal Token",
+              "description": "Zotero private key (create one at https://www.zotero.org/settings/keys/new)",
               "id": "token"
+          },
+          {   
+              "id":"libraryid", 
+              "title":"Library ID",
+              "description": "ID of the zotero library you'd like to sync; use your userID to sync your personal library",
+              "type":"text"
+          },
+          {   
+              "id":"librarytype", 
+              "title":"Group Library?",
+              "description": "Check this box if the library you'd like to sync is a group library",
+              "type":"bool"
+          },
+          {   
+              "id":"connectionname", 
+              "title":"Name",
+              "description": "Human-readable name for this configuration (e.g. which library is this)",
+              "type":"text"
           }
       ]
     }
@@ -33,9 +71,7 @@
       "action": "add-new-paper",
       "name": "Add new paper to Zotero library by DOI",
       "args": [
-        {"id":"doi", "name":"DOI", "type":"text"},
-        {"id":"libraryid", "name":"Library ID", "type":"text"},
-        {"id":"librarytype", "name":"Group Library?", "type":"bool"}        
+        {"id":"doi", "name":"DOI", "type":"text"}
       ]
     },    
     {
@@ -43,9 +79,7 @@
       "name": "Add new note to Zotero library",
       "args": [
         {"id":"note", "name":"Note Text", "type":"text"},
-        {"id":"parent", "name":"Literature Item ID", "type":"text"},        
-        {"id":"libraryid", "name":"Library ID", "type":"text"},
-        {"id":"librarytype", "name":"Group Library?", "type":"bool"}                
+        {"id":"parent", "name":"Literature Item ID", "type":"text"}              
       ]
     }
   ]
