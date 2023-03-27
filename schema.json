@@ -31,7 +31,9 @@
       },
       "abstractNote": {
         "name": "Abstract",
-        "type": "text"
+        "type": "text",
+        "subType":"md"
+
       },      
       "authorId": {
         "type": "array[text]",
@@ -150,7 +152,8 @@
       },
       "note": {
         "name": "Note",
-        "type": "text"
+        "type": "text",
+        "subType": "md"
       },
       "dateAdded": {
         "name": "Date Added",
