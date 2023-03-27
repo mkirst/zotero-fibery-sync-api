@@ -37,16 +37,21 @@ app.post(`/validate`, wrap(async (req, res) => {
             if (req.body.fields.connectionname) {
                 return res.json({
                     name: `${req.body.fields.connectionname} (username: ${user}) (${req.body.id})`,
-                });
-                    
+                });                    
             }
             return res.json({
-                name: `${user} (${req.body.id})`,
+                name: `${user} library ${req.body.fields.libraryid} (${req.body.id})`,
             });
         }
     }
 
-    return res.json({name: req.body.id});
+    if (req.body.fields.connectionname) {
+        return res.json({
+            name: `${req.body.fields.connectionname}`,
+        });                    
+    }
+
+    return res.json({name: `${req.body.id} library ${req.body.fields.libraryid}`});
 }));
 
 const syncConfig = require(`./config.sync.json`);
