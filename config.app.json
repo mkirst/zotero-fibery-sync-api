@@ -85,7 +85,8 @@
         {
           "id":"note", 
           "name":"Note Text", 
-          "type":"textArea",
+          "type":"text",
+          "subType":"md",
           "description":"The contents of the note you would like to add",
           "textTemplateSupported":true
         },
