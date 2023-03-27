@@ -241,7 +241,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 }));
 
 app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
-    // console.log(req.body);
+    console.log(req.body);
     let {action, account} = req.body;
 
     let req_opts = {headers: {
@@ -293,7 +293,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         response = await (got(url, req_opts));
         if (await handleBackoff(response.headers) > 0) {
             return res.json({message: "Rate limits exceeded", tryLater:true});
-        }    
+        }
         json_obj = JSON.parse(response.body);
         json_obj.note = action.args.note;
         json_obj.parentItem = action.args.parent;
