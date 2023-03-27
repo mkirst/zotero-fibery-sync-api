@@ -207,7 +207,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 console.log("data has no key:", data);
                 continue;                
             }
-            processNote(data);
+            processNote(data, item);
             items.push(data);
         }
     }

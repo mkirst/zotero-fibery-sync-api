@@ -61,7 +61,7 @@ function processTag(item) {
     item.__syncAction = "SET";    
 }
 
-function processNote(data) {
+function processNote(data, item) {
     data.name = data.key;
     data.id = uuid(JSON.stringify(data.key));
     data.literatureId = uuid(JSON.stringify(data.parentItem));
