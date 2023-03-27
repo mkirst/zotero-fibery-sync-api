@@ -21,6 +21,13 @@
           "title":"Library ID",
           "description": "ID of the zotero library you'd like to sync; use your userID to sync your personal library",
           "type":"text"
+        },
+        {   
+          "id":"librarytype", 
+          "title":"Group Library?",
+          "description": "Check this box if the library you'd like to sync is a group library",
+          "type":"bool",
+          "optional":true
         }
       ]
     },
@@ -46,7 +53,8 @@
             "id":"librarytype", 
             "title":"Group Library?",
             "description": "Check this box if the library you'd like to sync is a group library",
-            "type":"bool"
+            "type":"bool",
+            "optional":true
           },
           {
             "type": "text",
