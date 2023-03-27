@@ -281,7 +281,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         const result = await fetch(new_url, {
             method: 'POST',
             headers: {
-                'Zotero-Write-Token': account.token,
+                'Zotero-API-Key': account.token,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify([json_obj])
@@ -300,10 +300,11 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         json_obj.note = action.args.note;
         json_obj.parentItem = action.args.parent;
         const new_url = `https://api.zotero.org/${prefix}/${account.libraryid}/items`;
+        console.log(new_url, json_obj);
         const result = await fetch(new_url, {
             method: "POST",
             headers: {
-                'Zotero-Write-Token': account.token,
+                'Zotero-API-Key': account.token,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify([json_obj])
