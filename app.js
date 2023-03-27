@@ -294,6 +294,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         if (await handleBackoff(response.headers) > 0) {
             return res.json({message: "Rate limits exceeded", tryLater:true});
         }
+        console.log(response.body);
         json_obj = JSON.parse(response.body);
         json_obj.note = action.args.note;
         json_obj.parentItem = action.args.parent;
