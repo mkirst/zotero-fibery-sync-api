@@ -142,6 +142,10 @@ async function handleBackoff(header) {
     if ("Backoff" in header) {
         await wait(header.Backoff);
     }
+    if ("Retry-After" in header) {
+        return header["Retry-After"];
+    }
+    return 0;
 }
 
 module.exports = {processAuthor, processLiterature, processNote, processTag, populateJSONObj, handleBackoff};    

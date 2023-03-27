@@ -9,7 +9,7 @@ var parse = require('parse-link-header');
 const fs = require('fs');
 const Cite = require('citation-js')
 const fetch = (url) => import('node-fetch').then(({default: fetch}) => fetch(url));
-const { processAuthor, processLiterature, processNote, processTag, populateJSONObj } = require('./utils');
+const { processAuthor, processLiterature, processNote, processTag, populateJSONObj, handleBackoff } = require('./utils');
 
 const app = express();
 app.use(logger(`dev`));
@@ -31,6 +31,7 @@ app.post(`/validate`, wrap(async (req, res) => {
 
     if (req.body.fields != null && req.body.fields.token != null) {
         response = await got(`https://api.zotero.org/keys/${req.body.fields.token}`);
+        await handleBackoff(response.headers);
         body = JSON.parse(response.body);
         const user = body.username;
          if (user) {
@@ -118,6 +119,9 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
     let items = [];
     let response = await (got(url, req_opts));
+    if (await handleBackoff(response.headers) > 0) {
+        return res.json({message: "Rate limits exceeded", tryLater:true});
+    }
         
     if (requestedType == `literature`) {
         for (const item of JSON.parse(response.body)) {
@@ -265,6 +269,9 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         }
         
         response = await (got(url, req_opts));
+        if (await handleBackoff(response.headers) > 0) {
+            return res.json({message: "Rate limits exceeded", tryLater:true});
+        }    
         json_obj = JSON.parse(response.body);
         populateJSONObj(json_obj, output);
         const new_url = `https://api.zotero.org/${prefix}/${action.args.libraryid}/items`;
@@ -284,6 +291,9 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
 
         const url = "https://api.zotero.org/items/new?itemType=note";        
         response = await (got(url, req_opts));
+        if (await handleBackoff(response.headers) > 0) {
+            return res.json({message: "Rate limits exceeded", tryLater:true});
+        }    
         json_obj = JSON.parse(response.body);
         json_obj.note = action.args.note;
         json_obj.parentItem = action.args.parent;
