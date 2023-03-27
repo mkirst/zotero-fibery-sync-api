@@ -295,7 +295,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             return res.json({message: "Rate limits exceeded", tryLater:true});
         }
         console.log(response.body);
-        json_obj = JSON.parse(response.body);
+        json_obj = response.body;
         json_obj.note = action.args.note;
         json_obj.parentItem = action.args.parent;
         const new_url = `https://api.zotero.org/${prefix}/${action.args.parent.libraryid}/items`;
