@@ -276,7 +276,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         }    
         json_obj = JSON.parse(response.body);
         populateJSONObj(json_obj, output);
-        const new_url = `https://api.zotero.org/${prefix}/${account.libraryid}/items`;
+        const new_url = `https://api.zotero.org/${prefix}/${account.libraryid}/items/`;
 
         const result = await fetch(new_url, {
             method: 'POST',
@@ -299,8 +299,8 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         const json_obj = JSON.parse(response.body);
         json_obj.note = action.args.note;
         json_obj.parentItem = action.args.parent;
-        const new_url = `https://api.zotero.org/${prefix}/${account.libraryid}/items`;
-        console.log(new_url, json_obj, action);
+        const new_url = `https://api.zotero.org/${prefix}/${account.libraryid}/items/`;
+        console.log(new_url, JSON.stringify(json_obj));
         const result = await fetch(new_url, {
             method: "POST",
             headers: {
