@@ -301,7 +301,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         json_obj.parentItem = action.args.parent;
         const new_url = `https://api.zotero.org/${prefix}/${account.libraryid}/items`;
         const result = await fetch(new_url, {
-            method: 'post',
+            method: 'POST',
             headers: {
                 'Zotero-API-Key': account.token,
                 'Content-Type': 'application/json'
