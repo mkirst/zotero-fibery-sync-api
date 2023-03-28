@@ -108,9 +108,10 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 const version = fs.readFileSync(path.resolve(__dirname, filename), 'utf8');
                 console.log(version);
                 url += `?since=${version}`;
-                req_opts.headers["If-Unmodified-Since-Version"] = version;
-                const deleted = await got(`https://api.zotero.org/${prefix}/${libraryid}/deleted?since=${version}`);
+                const deleted = await got(`https://api.zotero.org/${prefix}/${libraryid}/deleted?since=${version}`, req_opts);
+                console.log(deleted);
                 handleDeletes(deleted, requestedType);
+                req_opts.headers["If-Unmodified-Since-Version"] = version;                
             } catch (err) {
                 console.log("File does not exist");
                 synchronizationType = "full";
