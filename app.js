@@ -109,7 +109,6 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 console.log(version);
                 url += `?since=${version}`;
                 const deleted = await got(`https://api.zotero.org/${prefix}/${libraryid}/deleted?since=${version}`, req_opts);
-                console.log(JSON.parse(deleted.body));
                 handleDeletes(JSON.parse(deleted.body), requestedType);
                 req_opts.headers["If-Unmodified-Since-Version"] = version;                
             } catch (err) {
