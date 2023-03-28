@@ -141,6 +141,7 @@ const wait = (ms) => new Promise((res) => setTimeout(res, ms));
 
 async function handleBackoff(header) {
     if ("Backoff" in header) {
+        console.log("Backing off...");
         await wait(header.Backoff);
     }
     if ("Retry-After" in header) {

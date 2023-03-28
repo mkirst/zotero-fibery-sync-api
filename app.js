@@ -285,7 +285,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             },
             body: JSON.stringify([json_obj])
         });
-        json_resp = JSON.parse(result);
+        json_resp = JSON.parse(resul.body);
         return res.json(json_resp);
 
     } else if (action.action == "add-new-note") {
@@ -299,7 +299,6 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         json_obj.note = action.args.note;
         json_obj.parentItem = action.args.parent;
         const new_url = `https://api.zotero.org/${prefix}/${account.libraryid}/items/`;
-        console.log(new_url, JSON.stringify(json_obj));
         const result = await got(new_url, {
             method: "POST",
             headers: {
@@ -309,7 +308,6 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             body: JSON.stringify([json_obj])
         });
         const result_json =  JSON.parse(result.body);
-        console.log(result_json);
         return res.json(result_json);        
     }
     return res.json({"message":"invalid action"});
