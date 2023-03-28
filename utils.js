@@ -111,6 +111,7 @@ function populateJSONObj(json_obj, output) {
         json_obj.ISBN = output[0].ISBN;
     }
 
+    let counter = 0;
     for (author of output[0].author) {
         new_author = JSON.parse(JSON.stringify(json_obj.creators[0]));
         new_author.firstName = author.given;
@@ -120,7 +121,7 @@ function populateJSONObj(json_obj, output) {
         } else {
             json_obj.creators[0] = new_author;
         }
-
+        counter++;
     }
 
     if (output[0].type == "article-journal") {
