@@ -14,11 +14,9 @@
     "citation-js": "^0.6.4",
     "express": "^4.18.2",
     "express-async-wrap": "^1.0.0",
-    "glob": "8.0.3",
     "got": "^11.8.3",
     "lodash": "^4.17.21",
     "morgan": "~1.9.0",
-    "node-fetch": "^3.3.0",
     "package.json": "^0.0.0",
     "parse-link-header": "^2.0.0",
     "uuid-by-string": "^3.0.5"

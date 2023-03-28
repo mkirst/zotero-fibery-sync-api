@@ -285,7 +285,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             },
             body: JSON.stringify([json_obj])
         });
-        json_resp = await result.json();
+        json_resp = JSON.parse(result);
         return res.json(json_resp);
 
     } else if (action.action == "add-new-note") {
