@@ -116,7 +116,7 @@ function populateJSONObj(json_obj, output) {
         new_author = JSON.parse(JSON.stringify(json_obj.creators[0]));
         new_author.firstName = author.given;
         new_author.lastName = author.family;
-        if (counter > 1) {
+        if (counter >= 1) {
             json_obj.creators.push(new_author);
         } else {
             json_obj.creators[0] = new_author;
