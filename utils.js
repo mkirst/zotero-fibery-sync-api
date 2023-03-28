@@ -163,6 +163,7 @@ function handleDeletes(deleted, requestedType, items) {
     } else if (requestedType == "tag") {
         for (var item of deleted["tags"]) {
             items.push({
+                console.log("Deleting tag", item);
                 id: uuid(JSON.stringify(item)),
                 __syncAction: "REMOVE"
             })
