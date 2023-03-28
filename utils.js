@@ -5,7 +5,7 @@ function processAuthor(a) {
         a.firstName = "";
         a.middleName = ""
     } else {
-        var split_name = a.firstName.split(" ");
+        var split_name = a.firstName.replace(/\s/g, " ").split(" ");
         a.firstName = split_name[0];
         if (split_name.length > 1) {
             a.middleName = split_name.slice(1).join(" ");
@@ -14,6 +14,7 @@ function processAuthor(a) {
         }
     }
     a.name = a.firstName + " " + a.middleName + " " + a.lastName;
+    a.name = a.name.replace(/\s/g, " ");
     a.id = uuid(JSON.stringify(a.name));
 }
 
