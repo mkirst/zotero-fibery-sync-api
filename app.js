@@ -8,7 +8,7 @@ const got = require(`got`);
 var parse = require('parse-link-header');
 const fs = require('fs');
 const Cite = require('citation-js')
-const { processAuthor, processLiterature, processNote, processTag, populateJSONObj, handleBackoff } = require('./utils');
+const { processAuthor, processLiterature, processNote, processTag, populateJSONObj, handleBackoff, handleDeletes } = require('./utils');
 
 const app = express();
 app.use(logger(`dev`));
@@ -93,6 +93,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         url = `https://api.zotero.org/${prefix}/${libraryid}/items?itemType=note&`;
     }
 
+    let items = [];
+
     if (pagination != null && pagination["link"] != null) {
         console.log("using pagination link ", pagination["link"], "for type", requestedType);
         url = pagination["link"];
@@ -107,6 +109,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 console.log(version);
                 url += `?since=${version}`;
                 req_opts.headers["If-Unmodified-Since-Version"] = version;
+                const deleted = await got(`https://api.zotero.org/${prefix}/${libraryid}/deleted?since=${version}`);
+                handleDeletes(deleted, requestedType);
             } catch (err) {
                 console.log("File does not exist");
                 synchronizationType = "full";
@@ -114,7 +118,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         }
     }
 
-    let items = [];
+
     let response = await (got(url, req_opts));
     if (response.status == 304) {
         pagination["hasNext"] = false;

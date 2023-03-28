@@ -150,4 +150,23 @@ async function handleBackoff(header) {
     return 0;
 }
 
-module.exports = {processAuthor, processLiterature, processNote, processTag, populateJSONObj, handleBackoff};    
+function handleDeletes(deleted, requestedType, items) {
+    // This technically handles both literature and notes
+    if (requestedType == "literature") {
+        for (var item of deleted["items"]) {
+            items.push({
+                id: uuid(JSON.stringify(item)),
+                __syncAction: "REMOVE"
+            })
+        }
+    } else if (requestedType == "tag") {
+        for (var item of deleted["tags"]) {
+            items.push({
+                id: uuid(JSON.stringify(item)),
+                __syncAction: "REMOVE"
+            })
+        }        
+    }
+}
+
+module.exports = {processAuthor, processLiterature, processNote, processTag, populateJSONObj, handleBackoff, handleDeletes};    
