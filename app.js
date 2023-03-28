@@ -308,7 +308,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             },
             body: JSON.stringify([json_obj])
         });
-        const result_json = await result.json();
+        const result_json =  JSON.parse(result);
         console.log(result_json);
         return res.json(result_json);        
     }
