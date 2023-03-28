@@ -8,7 +8,6 @@ const got = require(`got`);
 var parse = require('parse-link-header');
 const fs = require('fs');
 const Cite = require('citation-js')
-const fetch = (url) => import('node-fetch').then(({default: fetch}) => fetch(url));
 const { processAuthor, processLiterature, processNote, processTag, populateJSONObj, handleBackoff } = require('./utils');
 
 const app = express();
@@ -278,7 +277,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         populateJSONObj(json_obj, output);
         const new_url = `https://api.zotero.org/${prefix}/${account.libraryid}/items/`;
 
-        const result = await fetch(new_url, {
+        const result = await got(new_url, {
             method: 'POST',
             headers: {
                 'Zotero-API-Key': account.token,
@@ -301,7 +300,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         json_obj.parentItem = action.args.parent;
         const new_url = `https://api.zotero.org/${prefix}/${account.libraryid}/items/`;
         console.log(new_url, JSON.stringify(json_obj));
-        const result = await fetch(new_url, {
+        const result = await got(new_url, {
             method: "POST",
             headers: {
                 'Zotero-API-Key': account.token,
