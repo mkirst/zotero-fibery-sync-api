@@ -316,6 +316,9 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         });
         const result_json =  JSON.parse(result.body);
         console.log(result_json);
+        if ("0" in result_json.failed) {
+            return res.json(result_json.failed["0"]);                    
+        }
         return res.json(result_json);        
     }
     return res.json({"message":"invalid action"});
