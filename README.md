@@ -6,7 +6,7 @@ This is an integration that synchronizes [Zotero](https://www.zotero.org/) to [F
 
 - In Fibery, navigate to the space where you want to add Zotero
 - Click on the "integrate" button on the upper toolbar
-- Paste the following URL into the box: [zotero-fibery-sync-api-production.up.railway.app](zotero-fibery-sync-api-production.up.railway.app) (or host your own instance of this code and use that URL)
+- Paste the following URL into the box: [zotero-fibery-sync-api-production.up.railway.app](https://zotero-fibery-sync-api-production.up.railway.app) (or host your own instance of this code and use that URL)
 - Follow the configuration menu in Fibery. If you want to be able to read from private Zotero libraries or add items to your library, you will need to use token-based authentication. Otherwise you can use public authentication. You can get a token from the Zotero website (the configuration page has a link).
 - You will also need to provide a link to the Zotero ID for the library you wish to sync.
 - If the library you are syncing is a group library, check the "group library" box.
