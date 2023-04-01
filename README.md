@@ -29,7 +29,7 @@ This integration will create five databases (unless you choose to skip some of t
 This integration also gives you access to some actions which you can use to automate stuff related to Zoteto:
 
 - **Add item to Zotero by DOI** - will add an item to your library based on a DOI that you provide (requires that you set up the integration using a Zotero token with write access)
-- **Add note to Zotero** - adds a note to your library containing specified text. You must provide the Zotero Key for a parent item that the note is about (requires that you set up the integration using a Zotero token with write access).
+- **Add note to Zotero** - adds a note to your library containing specified text. You must provide the Zotero Key for a parent item that the note is about (requires that you set up the integration using a Zotero token with write access). The note will be a rich-text field (you can use Markdown templating to control is contents.)
 
 ## Limitations
 
