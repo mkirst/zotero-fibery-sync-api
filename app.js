@@ -122,6 +122,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     let response = await (got(url, req_opts));
     if (response.status == 304) {
         pagination["hasNext"] = false;
+        console.log("No updates");
         return res.json({items, pagination, synchronizationType});        
     }
     if (await handleBackoff(response.headers) > 0) {
@@ -326,7 +327,7 @@ app.use(function (req, res, next) {
 
 app.use(function (err, req, res, next) {
     res.status(err.status || 500);
-    console.log(err);
+    console.log(err, req.body);
     res.json({message: err.message, code: err.status || 500});
 });
 
