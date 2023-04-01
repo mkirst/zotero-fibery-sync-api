@@ -302,7 +302,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         }
         const json_obj = JSON.parse(response.body);
         console.log(action.args.note);
-        var converter = new showdown.Converter(),
+        var converter = new showdown.Converter();
         json_obj.note =  converter.makeHtml(action.args.note);
         json_obj.parentItem = action.args.parent;
         const new_url = `https://api.zotero.org/${prefix}/${account.libraryid}/items/`;
