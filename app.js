@@ -302,7 +302,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             return res.json({message: "Rate limits exceeded", tryLater:true});
         }
         const json_obj = JSON.parse(response.body);
-        console.log(action.args.note);
+        // console.log(action.args.note);
         var converter = new showdown.Converter();
         json_obj.note =  converter.makeHtml(action.args.note);
         json_obj.parentItem = action.args.parent;
@@ -316,7 +316,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
             body: JSON.stringify([json_obj])
         });
         const result_json =  JSON.parse(result.body);
-        console.log(result_json);
+        // console.log(result_json);
         if ("0" in result_json.failed) {
             return res.json(result_json.failed["0"]);                    
         }

@@ -43,42 +43,6 @@ This integration also gives you access to some actions which you can use to auto
 - For more information on how to use integrations in Fibery, see [this guide](https://the.fibery.io/@public/User_Guide/Guide/Integration-Templates-68). Note that I have not made a template for this integration (yet - I can if there's interest), so it acts more like the Google Calendar or Clickup integrations than the ones that have templates.
 - For more information on how to write your own template, see Fibery's documentation on the [integrations API](https://api.fibery.io/apps.html#integrations-api-overview) and [external actions API](https://api.fibery.io/external-actions.html#external-actions-api-overview)
 
-## Advanced usage
-
-To sync a rich text field to Zotero using the "Add new note to Zotero" action, you will first have to convert the rich text field into a pure text field. You can use this script in a Fibery action to do that (assumes your rich text field is called `Note` and that you have a bonus plain text field called `TextNote` - you can hide the plain text field in your Fibery interface so that it isn't visually distracting):
-
-```js
-// Developer reference is at api.fibery.io/#action-buttons
-
-// Fibery API is used to retrieve and update entities
-const fibery = context.getService('fibery');
-
-// affected entities are stored in args.currentEntities;
-// to support batch actions they always come in an array
-for (const entity of args.currentEntities) {
-
-    // the rich text field is a document, which requires a special id to get access to
-    // In this case, the rich text field is "Description", so we request that field be included
-    const entityWithExtraFields = await fibery.getEntityById(entity.type, entity.id, ['Note']);
-
-    // as long as we have the rich text field looking valid, let's do something with it
-    if (entityWithExtraFields['Note']) {
-        // just saving a shorter reference to it
-        const dsc = entityWithExtraFields['Note'];
-
-        // get the rich text field contents as markdown (supports md, html, and json)
-        const doc = await fibery.getDocumentContent(dsc.secret, 'html');
-
-        // now we can search the rich text for whatever we are looking for
-        // In this case, lets just see if the doc is non-null and non-empty, 
-        // then update a checkbox
-
-        await fibery.updateEntity(entity.type, entity.id, {
-            'TextNote': doc
-        });
-    }
-}
-```
 
 ## Support
 
