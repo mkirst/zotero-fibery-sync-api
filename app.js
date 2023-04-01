@@ -7,7 +7,8 @@ const uuid = require(`uuid-by-string`);
 const got = require(`got`);
 var parse = require('parse-link-header');
 const fs = require('fs');
-const Cite = require('citation-js')
+const Cite = require('citation-js');
+const showdown  = require('showdown');
 const { processAuthor, processLiterature, processNote, processTag, populateJSONObj, handleBackoff, handleDeletes } = require('./utils');
 
 const app = express();
