@@ -73,7 +73,7 @@ app.post(`/validate`, wrap(async (req, res) => {
             }    
         } catch(err) {
             res.status(err.response.statusCode);
-            if (response.status == 404) {
+            if (err.response.status == 404) {
                 return res.json({message:"Invalid Zotero API key provided"});
             }
         }
