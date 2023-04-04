@@ -46,19 +46,23 @@ app.post(`/validate`, wrap(async (req, res) => {
         body = JSON.parse(response.body);
         const user = body.username;
 
-        const test_query = await got(`https://api.zotero.org/${prefix}/${req.body.fields.libraryid}/items?limit=25`, req_opts);
-        if (test_query.status == 500) {
-            return res.json({"message":"Invalid library ID (should be a sequence of numbers)"});
-        }    
-        if (test_query.status == 404) {
-            if (prefix == "groups") {
-                return res.json({"message":"Invalid library ID (checkbox indicates that this is supposed to be a group library; find its ID by clicking on the groups tab in Zotero)"});
+        try {
+            const test_query = await got(`https://api.zotero.org/${prefix}/${req.body.fields.libraryid}/items?limit=25`, req_opts);
+        } catch(err) {
+            if (err.response.statusCode == 500) {
+                return res.json({"message":"Invalid library ID (should be a sequence of numbers)"});
+            }    
+            if (err.response.statusCode == 404) {
+                if (prefix == "groups") {
+                    return res.json({"message":"Invalid library ID (checkbox indicates that this is supposed to be a group library; find its ID by clicking on the groups tab in Zotero)"});
+                }
+                return res.json({"message":"Invalid library ID (checkbox indicates that this is an individual library; the ID should be the userID given on https://www.zotero.org/settings/keys) (hint: it should be a sequence of numbers)"});
             }
-            return res.json({"message":"Invalid library ID (checkbox indicates that this is an individual library; the ID should be the userID given on https://www.zotero.org/settings/keys) (hint: it should be a sequence of numbers)"});
+            if (err.response.statusCode == 403) {
+                return res.json({"message": "The given API token does not have access to the specified library"});
+            }
         }
-        if (test_query.status == 403) {
-            return res.json({"message": "The given API token does not have access to the specified library"});
-        }
+
         if (user) {
             if (req.body.fields.connectionname) {
                 return res.json({
@@ -71,20 +75,21 @@ app.post(`/validate`, wrap(async (req, res) => {
         }
     }
 
-    console.log("About to qurt");
-    const test_query_public = await got(`https://api.zotero.org/${prefix}/${req.body.fields.libraryid}/items?limit=25`);
-    console.log(test_query_public);
-    if (test_query_public.status == 500) {
-        return res.json({"message":"Invalid library ID (should be a sequence of numbers)"});
-    }
-    if (test_query_public.status == 404) {
-        if (prefix == "groups") {
-            return res.json({"message":"Invalid library ID (checkbox indicates that this is supposed to be a group library; find its ID by clicking on the groups tab in Zotero)"});
+    try {
+        const test_query_public = await got(`https://api.zotero.org/${prefix}/${req.body.fields.libraryid}/items?limit=25`);
+    } catch (err) {
+        if (err.response.statusCode == 500) {
+            return res.json({"message":"Invalid library ID (should be a sequence of numbers)"});
         }
-        return res.json({"message":"Invalid library ID (checkbox indicates that this is an individual library; the ID should be the userID given on https://www.zotero.org/settings/keys) (hint: it should be a sequence of numbers)"});
-    }
-    if (test_query_public.status == 403) {
-        return res.json({"message": "The specified library is not publicly accessible. Change library or use token authentication."});
+        if (err.response.statusCode == 404) {
+            if (prefix == "groups") {
+                return res.json({"message":"Invalid library ID (checkbox indicates that this is supposed to be a group library; find its ID by clicking on the groups tab in Zotero)"});
+            }
+            return res.json({"message":"Invalid library ID (checkbox indicates that this is an individual library; the ID should be the userID given on https://www.zotero.org/settings/keys) (hint: it should be a sequence of numbers)"});
+        }
+        if (err.response.statusCode == 403) {
+            return res.json({"message": "The specified library is not publicly accessible. Change library or use token authentication."});
+        }    
     }
 
 
