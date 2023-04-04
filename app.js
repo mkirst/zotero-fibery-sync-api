@@ -36,48 +36,54 @@ app.post(`/validate`, wrap(async (req, res) => {
     }
 
     if (req.body.fields != null && req.body.fields.token != null) {
-        response = await got(`https://api.zotero.org/keys/${req.body.fields.token}`);
-        if (response.status == 404) {
-            return res.json({"message":"Invalid Zotero API key provided"});
-        }
-        await handleBackoff(response.headers);
-        req_opts.headers["Zotero-API-Key"] = req.body.fields.token;
-
-        body = JSON.parse(response.body);
-        const user = body.username;
-
         try {
-            const test_query = await got(`https://api.zotero.org/${prefix}/${req.body.fields.libraryid}/items?limit=25`, req_opts);
-        } catch(err) {
-            if (err.response.statusCode == 500) {
-                return res.json({"message":"Invalid library ID (should be a sequence of numbers)"});
-            }    
-            if (err.response.statusCode == 404) {
-                if (prefix == "groups") {
-                    return res.json({"message":"Invalid library ID (checkbox indicates that this is supposed to be a group library; find its ID by clicking on the groups tab in Zotero)"});
+            const response = await got(`https://api.zotero.org/keys/${req.body.fields.token}`);
+            await handleBackoff(response.headers);
+            req_opts.headers["Zotero-API-Key"] = req.body.fields.token;
+    
+            body = JSON.parse(response.body);
+            const user = body.username;
+
+            try {
+                await got(`https://api.zotero.org/${prefix}/${req.body.fields.libraryid}/items?limit=25`, req_opts);
+            } catch(err) {
+                res.status(err.response.statusCode);
+                if (err.response.statusCode == 500) {
+                    return res.json({message:"Invalid library ID (should be a sequence of numbers)"});
+                }    
+                if (err.response.statusCode == 404) {
+                    if (prefix == "groups") {
+                        return res.json({message:"Invalid library ID (checkbox indicates that this is supposed to be a group library; find its ID by clicking on the groups tab in Zotero)"});
+                    }
+                    return res.json({message:"Invalid library ID (checkbox indicates that this is an individual library; the ID should be the userID given on https://www.zotero.org/settings/keys) (hint: it should be a sequence of numbers)"});
                 }
-                return res.json({"message":"Invalid library ID (checkbox indicates that this is an individual library; the ID should be the userID given on https://www.zotero.org/settings/keys) (hint: it should be a sequence of numbers)"});
+                if (err.response.statusCode == 403) {
+                    return res.json({message: "The given API token does not have access to the specified library"});
+                }
             }
-            if (err.response.statusCode == 403) {
-                return res.json({"message": "The given API token does not have access to the specified library"});
+            if (user) {
+                if (req.body.fields.connectionname) {
+                    return res.json({
+                        name: `${req.body.fields.connectionname} (username: ${user}) (${req.body.id})`,
+                    });                    
+                }
+                return res.json({
+                    name: `${user} library ${req.body.fields.libraryid} (${req.body.id})`,
+                });
+            }    
+        } catch(err) {
+            res.status(err.response.statusCode);
+            if (response.status == 404) {
+                return res.json({message:"Invalid Zotero API key provided"});
             }
         }
 
-        if (user) {
-            if (req.body.fields.connectionname) {
-                return res.json({
-                    name: `${req.body.fields.connectionname} (username: ${user}) (${req.body.id})`,
-                });                    
-            }
-            return res.json({
-                name: `${user} library ${req.body.fields.libraryid} (${req.body.id})`,
-            });
-        }
     }
 
     try {
-        const test_query_public = await got(`https://api.zotero.org/${prefix}/${req.body.fields.libraryid}/items?limit=25`);
+        await got(`https://api.zotero.org/${prefix}/${req.body.fields.libraryid}/items?limit=25`);
     } catch (err) {
+        res.status(err.response.statusCode);
         if (err.response.statusCode == 500) {
             return res.json({"message":"Invalid library ID (should be a sequence of numbers)"});
         }
@@ -369,7 +375,7 @@ app.post(`/api/v1/automations/action/execute`, wrap(async (req, res) => {
         }
         return res.json(result_json);        
     }
-    return res.json({"message":"invalid action"});
+    return res.json({message:"invalid action"});
 
 }));
 
