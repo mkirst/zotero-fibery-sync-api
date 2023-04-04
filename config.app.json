@@ -19,7 +19,7 @@
         {   
           "id":"libraryid", 
           "title":"Library ID",
-          "description": "ID of the zotero library you'd like to sync; use your userID to sync your personal library",
+          "description": "ID of the zotero library you'd like to sync; use your userID to sync your personal library (your userID is the 'userID for use in API calls' listed on https://www.zotero.org/settings/keys)",
           "type":"text"
         },
         {   
@@ -46,7 +46,7 @@
           {   
             "id":"libraryid", 
             "title":"Library ID",
-            "description": "ID of the zotero library you'd like to sync; use your userID to sync your personal library",
+            "description": "ID of the zotero library you'd like to sync; use your userID to sync your personal library (your userID is the 'userID for use in API calls' listed on https://www.zotero.org/settings/keys)",
             "type":"text"
           },
           {   
