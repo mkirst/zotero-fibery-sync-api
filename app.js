@@ -31,7 +31,7 @@ app.post(`/validate`, wrap(async (req, res) => {
 
     const req_opts = {headers:{}};
     let prefix = "users";
-    if (req.body.fields.librarytype) {
+    if ("librarytype" in req.body.fields && req.body.fields.librarytype) {
         prefix = "groups"; 
     }
 
@@ -71,7 +71,9 @@ app.post(`/validate`, wrap(async (req, res) => {
         }
     }
 
+    console.log("About to qurt");
     const test_query_public = await got(`https://api.zotero.org/${prefix}/${req.body.fields.libraryid}/items?limit=25`);
+    console.log(test_query_public);
     if (test_query_public.status == 500) {
         return res.json({"message":"Invalid library ID (should be a sequence of numbers)"});
     }
