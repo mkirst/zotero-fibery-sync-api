@@ -47,6 +47,9 @@ app.post(`/validate`, wrap(async (req, res) => {
         const user = body.username;
 
         const test_query = await got(`https://api.zotero.org/${prefix}/${req.body.fields.libraryid}/items?limit=25`, req_opts);
+        if (test_query.status == 500) {
+            return res.json({"message":"Invalid library ID (should be a sequence of numbers)"});
+        }    
         if (test_query.status == 404) {
             if (prefix == "groups") {
                 return res.json({"message":"Invalid library ID (checkbox indicates that this is supposed to be a group library; find its ID by clicking on the groups tab in Zotero)"});
@@ -69,6 +72,9 @@ app.post(`/validate`, wrap(async (req, res) => {
     }
 
     const test_query_public = await got(`https://api.zotero.org/${prefix}/${req.body.fields.libraryid}/items?limit=25`);
+    if (test_query_public.status == 500) {
+        return res.json({"message":"Invalid library ID (should be a sequence of numbers)"});
+    }
     if (test_query_public.status == 404) {
         if (prefix == "groups") {
             return res.json({"message":"Invalid library ID (checkbox indicates that this is supposed to be a group library; find its ID by clicking on the groups tab in Zotero)"});
