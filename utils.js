@@ -18,8 +18,25 @@ function processAuthor(a) {
     a.id = uuid(JSON.stringify(a.name));
 }
 
+function processCreator(a) {
+    if (a.firstName === undefined) {
+        a.firstName = "";
+        a.middleName = ""
+    } else {
+        var split_name = a.firstName.replace(/\s/g, " ").split(" ");
+        a.firstName = split_name[0];
+        if (split_name.length > 1) {
+            a.middleName = split_name.slice(1).join(" ");
+        } else {
+            a.middleName = "";
+        }
+    }
+    a.name = a.lastName;
+    a.name = a.name.replace(/\s/g, " ");
+}
+
 function processLiterature(data, item) {
-    data.name = data.creators + " " + data.year;
+    data.name = data.creators[0].lastName + " " + data.year + " (" + data.date.substring(0, 4) + ")";
     data.title = data.title;
     data.link = item.links.alternate.href;
     data.key = item.key;
