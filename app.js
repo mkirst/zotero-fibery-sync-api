@@ -194,7 +194,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             }
 
             // Create unique bib key as name
-            data.name = processBibKey(item, bibKeys);
+            data.name = processBibKey(item.meta, bibKeys);
             bibKeys.push(entry);
 
             data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`, req_opts)).body;
