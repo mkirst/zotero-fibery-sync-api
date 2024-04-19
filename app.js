@@ -9,7 +9,7 @@ var parse = require('parse-link-header');
 const fs = require('fs');
 const Cite = require('citation-js');
 const showdown  = require('showdown');
-const { processAuthor, processLiterature, processNote, processTag, populateJSONObj, handleBackoff, handleDeletes } = require('./utils');
+const { processAuthor, processBibKey, processLiterature, processNote, processTag, populateJSONObj, handleBackoff, handleDeletes } = require('./utils');
 
 const app = express();
 app.use(logger(`dev`));
@@ -148,6 +148,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     }
 
     let items = [];
+    let bibKeys = [];
+
 
     if (pagination != null && pagination["link"] != null) {
         console.log("using pagination link ", pagination["link"], "for type", requestedType);
@@ -190,7 +192,11 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 console.log("Item has no key:", item);
                 continue;                
             }
-            data.name = item.meta.creatorSummary + " " + item.meta.parsedDate;
+
+            // Create unique bib key as name
+            data.name = processBibKey(item, bibKeys);
+            bibKeys.push(entry);
+
             data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`, req_opts)).body;
             try {
                 data.id = uuid(JSON.stringify(item.key));

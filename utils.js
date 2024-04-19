@@ -18,25 +18,24 @@ function processAuthor(a) {
     a.id = uuid(JSON.stringify(a.name));
 }
 
-function processCreator(a) {
-    if (a.firstName === undefined) {
-        a.firstName = "";
-        a.middleName = ""
-    } else {
-        var split_name = a.firstName.replace(/\s/g, " ").split(" ");
-        a.firstName = split_name[0];
-        if (split_name.length > 1) {
-            a.middleName = split_name.slice(1).join(" ");
-        } else {
-            a.middleName = "";
-        }
+function processBibKey(meta, bibKeys) {
+    let originalEntry = meta.creatorSummary + " " + meta.parsedDate.substring(0, 4);
+    let suffix = '';
+    let count = 1;
+    let entry = originalEntry;
+
+    // Check if the entry already exists in bibKeys
+    while (bibKeys.includes(entry)) {
+        // Append a lowercase letter as a suffix
+        suffix = ' ' + String.fromCharCode(96 + count); // 96 corresponds to 'a' in ASCII
+        entry = originalEntry + suffix;
+        count++;
     }
-    a.name = a.lastName;
-    a.name = a.name.replace(/\s/g, " ");
+
+    return entry;
 }
 
 function processLiterature(data, item) {
-    //data.name = data.creators[0].lastName + " " + data.year + " (" + data.date.substring(0, 4) + ")";
     data.title = data.title;
     data.link = item.links.alternate.href;
     data.key = item.key;
@@ -188,4 +187,4 @@ function handleDeletes(deleted, requestedType, items) {
     }
 }
 
-module.exports = {processAuthor, processLiterature, processNote, processTag, populateJSONObj, handleBackoff, handleDeletes};    
+module.exports = {processAuthor, processBibKey, processLiterature, processNote, processTag, populateJSONObj, handleBackoff, handleDeletes};    
