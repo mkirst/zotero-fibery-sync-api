@@ -19,7 +19,8 @@ function processAuthor(a) {
 }
 
 function processLiterature(data, item) {
-    data.name = data.title;
+    data.name = data.creators + " " + data.year;
+    data.title = data.title;
     data.link = item.links.alternate.href;
     data.key = item.key;
     data.authorId = [];
