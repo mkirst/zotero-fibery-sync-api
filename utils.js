@@ -36,7 +36,7 @@ function processCreator(a) {
 }
 
 function processLiterature(data, item) {
-    data.name = data.creators[0].lastName + " " + data.year + " (" + data.date.substring(0, 4) + ")";
+    //data.name = data.creators[0].lastName + " " + data.year + " (" + data.date.substring(0, 4) + ")";
     data.title = data.title;
     data.link = item.links.alternate.href;
     data.key = item.key;

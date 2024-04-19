@@ -190,6 +190,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 console.log("Item has no key:", item);
                 continue;                
             }
+            data.name = item.meta.creatorSummary + " " + item.meta.parsedDate;
             data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`, req_opts)).body;
             try {
                 data.id = uuid(JSON.stringify(item.key));
