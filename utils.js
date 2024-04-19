@@ -103,17 +103,21 @@ function processTag(item) {
 }
 
 function processNote(data, item) {
-    data.name = data.key;
-    data.id = uuid(JSON.stringify(data.key));
-    data.literatureId = data.parentItem === undefined ? uuid() : uuid(JSON.stringify(data.parentItem));
-    data.link = item.links.alternate.href;
-    if ("createdByUser" in item.meta) {
-        data.creator = item.meta.createdByUser.name;
-    } else {
-        data.creator = "";
-    }
+    try {
+        data.name = data.key;
+        data.id = uuid(JSON.stringify(data.key));
+        data.literatureId = data.parentItem === undefined || data.parentItem.length == 0 ? uuid() : uuid(JSON.stringify(data.parentItem));
+        data.link = item.links.alternate.href;
+        if ("createdByUser" in item.meta) {
+            data.creator = item.meta.createdByUser.name;
+        } else {
+            data.creator = "";
+        }
 
-    data.__syncAction = "SET";    
+        data.__syncAction = "SET";    
+    } catch (err) {
+        console.log("Cannot create UUID.");
+    }
 }
 
 function populateJSONObj(json_obj, output) {

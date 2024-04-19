@@ -140,7 +140,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
     let synchronizationType = "delta";
 
-    let url = `https://api.zotero.org/${prefix}/${libraryid}/items/top?limit=100&`;
+    let url = `https://api.zotero.org/${prefix}/${libraryid}/items/top?sort=creator&direction=asc&limit=100&`;
     if (requestedType == "tag") {
         url = `https://api.zotero.org/${prefix}/${libraryid}/items/tags`;
     } else if (requestedType == "note") {
