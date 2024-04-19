@@ -9,7 +9,7 @@ var parse = require('parse-link-header');
 const fs = require('fs');
 const Cite = require('citation-js');
 const showdown  = require('showdown');
-const { processAuthor, processBibKey, processLiterature, processNote, processTag, populateJSONObj, handleBackoff, handleDeletes } = require('./utils');
+const { processAuthor, generateBibKey, processLiterature, processNote, processTag, populateJSONObj, handleBackoff, handleDeletes } = require('./utils');
 
 const app = express();
 app.use(logger(`dev`));
@@ -199,7 +199,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             }
 
             // Create unique bib key as name
-            data.name = processBibKey(item.meta, bibKeys);
+            data.name = generateBibKey(item.meta, bibKeys);
             bibKeys.push(data.name);
 
             data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`, req_opts)).body;

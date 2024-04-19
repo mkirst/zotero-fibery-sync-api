@@ -18,7 +18,7 @@ function processAuthor(a) {
     a.id = uuid(JSON.stringify(a.name));
 }
 
-function processBibKey(meta, bibKeys) {
+function generateBibKey(meta, bibKeys) {
     let originalEntry = '';
     let originalInfix = '';
 
@@ -28,11 +28,11 @@ function processBibKey(meta, bibKeys) {
     }
 
     if (meta.parsedDate === undefined || meta.parsedDate.length < 4) {
-        originalEntry = meta.creatorSummary
+        originalEntry = meta.creatorSummary.trim()
         originalInfix = ' ';
     }
     else {
-        originalEntry = meta.creatorSummary + " " + meta.parsedDate.substring(0, 4);
+        originalEntry = meta.creatorSummary.trim() + " " + meta.parsedDate.substring(0, 4);
         originalInfix = '';
     }
 
@@ -46,7 +46,7 @@ function processBibKey(meta, bibKeys) {
     // Check if the entry already exists in bibKeys
     while (bibKeys.includes(entry)) {
         // Append a lowercase letter as a suffix
-        suffix = infix + String.fromCharCode(96 + (count % 26)); // 96 corresponds to 'a' in ASCII
+        suffix = infix + String.fromCharCode(96 + (count % 26)); // 97 corresponds to 'a' in ASCII
         entry = originalEntry + suffix;
         count++;
 
@@ -105,7 +105,7 @@ function processTag(item) {
 function processNote(data, item) {
     data.name = data.key;
     data.id = uuid(JSON.stringify(data.key));
-    data.literatureId = uuid(JSON.stringify(data.parentItem));
+    data.literatureId = data.parentItem === undefined ? uuid() : uuid(JSON.stringify(data.parentItem));
     data.link = item.links.alternate.href;
     if ("createdByUser" in item.meta) {
         data.creator = item.meta.createdByUser.name;
@@ -210,4 +210,4 @@ function handleDeletes(deleted, requestedType, items) {
     }
 }
 
-module.exports = {processAuthor, processBibKey, processLiterature, processNote, processTag, populateJSONObj, handleBackoff, handleDeletes};    
+module.exports = {processAuthor, generateBibKey, processLiterature, processNote, processTag, populateJSONObj, handleBackoff, handleDeletes};    
