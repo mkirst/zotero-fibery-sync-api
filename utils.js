@@ -20,7 +20,7 @@ function processAuthor(a) {
 
 function processBibKey(meta, bibKeys) {
     let originalEntry = '';
-    let infix = '';
+    let originalInfix = '';
 
     if (meta.creatorSummary === undefined)
     {
@@ -29,23 +29,30 @@ function processBibKey(meta, bibKeys) {
 
     if (meta.parsedDate === undefined || meta.parsedDate.length < 4) {
         originalEntry = meta.creatorSummary
-        infix = ' ';
+        originalInfix = ' ';
     }
     else {
         originalEntry = meta.creatorSummary + " " + meta.parsedDate.substring(0, 4);
-        infix = '';
+        originalInfix = '';
     }
 
     let suffix = '';
     let count = 1;
+    let subCount = 1;
+
     let entry = originalEntry;
+    let infix = originalInfix;
 
     // Check if the entry already exists in bibKeys
     while (bibKeys.includes(entry)) {
         // Append a lowercase letter as a suffix
-        suffix = String.fromCharCode(96 + count); // 96 corresponds to 'a' in ASCII
+        suffix = infix + String.fromCharCode(96 + (count % 26)); // 96 corresponds to 'a' in ASCII
         entry = originalEntry + suffix;
         count++;
+
+        if (count > 26) {
+            infix = originalInfix + Math.floor(count / 26);
+        }
     }
 
     return entry;
