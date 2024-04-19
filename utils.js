@@ -27,7 +27,7 @@ function processBibKey(meta, bibKeys) {
     // Check if the entry already exists in bibKeys
     while (bibKeys.includes(entry)) {
         // Append a lowercase letter as a suffix
-        suffix = ' ' + String.fromCharCode(96 + count); // 96 corresponds to 'a' in ASCII
+        suffix = String.fromCharCode(96 + count); // 96 corresponds to 'a' in ASCII
         entry = originalEntry + suffix;
         count++;
     }
