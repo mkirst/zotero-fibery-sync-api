@@ -193,6 +193,11 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
                 continue;                
             }
 
+            if (data.itemType == "note") {
+                // Don't sync standalone notes!
+                continue;
+            }
+
             // Create unique bib key as name
             data.name = processBibKey(item.meta, bibKeys);
             bibKeys.push(data.name);
