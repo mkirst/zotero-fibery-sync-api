@@ -5,6 +5,10 @@
         "type": "id"
       },
       "name": {
+        "name": "Name",
+        "type": "text"
+      },
+      "name": {
         "name": "Title",
         "type": "text"
       },
