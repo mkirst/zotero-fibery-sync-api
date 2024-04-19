@@ -19,8 +19,7 @@ function processAuthor(a) {
 }
 
 function processBibKey(meta, bibKeys) {
-    console.log(meta);
-    let originalEntry = meta.creatorSummary + " " + meta.parsedDate; //.substring(0, 4);
+    let originalEntry = meta.creatorSummary + " " + meta.parsedDate.substring(0, 4);
     let suffix = '';
     let count = 1;
     let entry = originalEntry;
