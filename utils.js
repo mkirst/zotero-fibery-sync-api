@@ -19,7 +19,23 @@ function processAuthor(a) {
 }
 
 function processBibKey(meta, bibKeys) {
-    let originalEntry = meta.creatorSummary + " " + meta.parsedDate.substring(0, 4);
+    let originalEntry = '';
+    let infix = '';
+
+    if (meta.creatorSummary === undefined)
+    {
+        meta.creatorSummary = 'Undefined';
+    }
+
+    if (meta.parsedDate === undefined || meta.parsedDate.length < 4) {
+        originalEntry = meta.creatorSummary
+        infix = ' ';
+    }
+    else {
+        originalEntry = meta.creatorSummary + " " + meta.parsedDate.substring(0, 4);
+        infix = '';
+    }
+
     let suffix = '';
     let count = 1;
     let entry = originalEntry;
