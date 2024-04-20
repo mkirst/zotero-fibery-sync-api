@@ -115,11 +115,12 @@ const schema = require(`./schema.json`);
 
 app.post(`/api/v1/synchronizer/schema`, (req, res) => res.json(schema));
 
-let bibKeys = [];
-
 app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     let {requestedType, pagination, account, lastSynchronizedAt} = req.body;
     const req_opts = {headers:{}};
+
+    console.log(req.body);
+    
     if (account.auth == "token") {
         req_opts.headers["Zotero-API-Key"] = account.token;
     }
@@ -150,6 +151,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     }
 
     let items = [];
+    let bibKeys = [];
 
     if (pagination != null && pagination["link"] != null) {
         console.log("using pagination link ", pagination["link"], "for type", requestedType);
