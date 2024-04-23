@@ -119,7 +119,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
     let {requestedType, pagination, account, lastSynchronizedAt} = req.body;
     const req_opts = {headers:{}};
 
-    console.log(req.body);
+    //console.log(req.body);
     
     if (account.auth == "token") {
         req_opts.headers["Zotero-API-Key"] = account.token;
@@ -209,8 +209,12 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
 
             // Find collections
             if ("collections" in data) {
-                for (c of data.collections) {                    
-                    data.collectionId.push(uuid(JSON.stringify(c)));
+                for (c of data.collections) {
+                    console.log("Collection " + c);
+                    if (!c.isEmpty())
+                    {
+                        data.collectionId.push(uuid(JSON.stringify(c)));
+                    }
                 }        
             }
 
@@ -300,7 +304,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             const data = item.data;
 
             if (!("key" in data)) {
-                console.log("data has no key:", data);
+                console.log("Data has no key:", data);
                 continue;                
             }
             processNote(data, item);
