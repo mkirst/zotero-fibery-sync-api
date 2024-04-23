@@ -210,7 +210,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             // Find collections
             if ("collections" in data) {
                 for (c of data.collections) {                    
-                    data.collectionId.push(c.id);
+                    data.collectionId.push(uuid(JSON.stringify(c)));
                 }        
             }
 
