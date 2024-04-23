@@ -18,6 +18,14 @@ function processAuthor(a) {
     a.id = uuid(JSON.stringify(a.name));
 }
 
+function processCollection(c) {
+    c.name = c.data.name;
+    c.id = uuid(JSON.stringify(c.key));
+    c.link = c.links.alternate.href;
+
+    c.__syncAction = "SET";    
+}
+
 function generateBibKey(meta, bibKeys) {
     let originalEntry = '';
     let originalInfix = '';
@@ -72,6 +80,15 @@ function processLiterature(data, item) {
             data.authorId.push(a.id);
         }
     }
+
+    // Add link to collections
+    //data.collectionId = [];
+    //if ("collections" in data) {
+    //    for (c of data.collections) {
+    //        data.collectionId.push(uuid(JSON.stringify(c)));
+    //    }
+   // }
+
     if ("publicationTitle" in data) {
         data.venueId = uuid(JSON.stringify(data.publicationTitle));
     } else if ("conferenceName" in data && data.conferenceName != "") {
@@ -214,4 +231,4 @@ function handleDeletes(deleted, requestedType, items) {
     }
 }
 
-module.exports = {processAuthor, generateBibKey, processLiterature, processNote, processTag, populateJSONObj, handleBackoff, handleDeletes};    
+module.exports = {processCollection, processAuthor, generateBibKey, processLiterature, processNote, processTag, populateJSONObj, handleBackoff, handleDeletes};    

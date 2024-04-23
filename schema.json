@@ -50,6 +50,17 @@
           "targetFieldId": "id"
         }
       },      
+      "collectionId": {
+        "type": "array[text]",
+        "name": "Collection Id",
+        "relation": {
+          "cardinality": "many-to-many",
+          "targetName": "Works",
+          "name": "Collections",
+          "targetType": "collection",
+          "targetFieldId": "id"
+        }
+      },      
       "tagId": {
         "type": "array[text]",
         "name": "Tag Id",
@@ -122,6 +133,25 @@
         "name": "Type",
         "type": "text"
       },
+      "link": {
+        "name": "Zotero Link",
+        "type": "text",
+        "subType": "url"
+      }
+    },
+    "collection" : {
+      "id": {
+        "name": "Id",
+        "type": "id"
+      },
+      "collection": {
+        "name": "Collection",
+        "type": "text"
+      }, 
+      "key": {
+        "name": "Key",
+        "type": "text"
+      }, 
       "link": {
         "name": "Zotero Link",
         "type": "text",

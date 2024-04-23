@@ -9,7 +9,7 @@ var parse = require('parse-link-header');
 const fs = require('fs');
 const Cite = require('citation-js');
 const showdown  = require('showdown');
-const { processAuthor, generateBibKey, processLiterature, processNote, processTag, populateJSONObj, handleBackoff, handleDeletes } = require('./utils');
+const { processCollection, processAuthor, generateBibKey, processLiterature, processNote, processTag, populateJSONObj, handleBackoff, handleDeletes } = require('./utils');
 
 const app = express();
 app.use(logger(`dev`));
@@ -129,7 +129,7 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         throw new Error(`Library ID must be specified`);
     }
 
-    if (requestedType != `literature` && requestedType != `author` && requestedType != `venue` && requestedType != `tag` && requestedType != `note`) { 
+    if (requestedType != `literature` && requestedType != `author` && requestedType != `venue` && requestedType != `tag` && requestedType != `note` && requestedType != `collection`) { 
         throw new Error(`Only literature and author databases can be synchronized`);
     }
 
@@ -148,6 +148,8 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         url = `https://api.zotero.org/${prefix}/${libraryid}/items/tags`;
     } else if (requestedType == "note") {
         url = `https://api.zotero.org/${prefix}/${libraryid}/items?itemType=note&`;
+    } else if (requestedType == "collection") {
+        url = `https://api.zotero.org/${prefix}/${libraryid}/collections?`;
     }
 
     let items = [];
@@ -204,6 +206,13 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             let bibKey = generateBibKey(item.meta, bibKeys);
             bibKeys.push(bibKey);
             data.name = bibKey + ' (' + item.key + ')';
+
+            // Find collections
+            if ("collections" in data) {
+                for (c of data.collections) {                    
+                    data.collectionId.push(c.id);
+                }        
+            }
 
             data.bibtex = (await got(`https://api.zotero.org/${prefix}/${libraryid}/items/${item.key}?format=bibtex`, req_opts)).body;
             try {
@@ -274,6 +283,14 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
         for (const item of JSON.parse(response.body)) {
 
             processTag(item);
+            items.push(item);
+
+        }
+    } else if (requestedType == `collection`) {
+
+        for (const item of JSON.parse(response.body)) {
+
+            processCollection(item);
             items.push(item);
 
         }
