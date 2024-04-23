@@ -144,7 +144,7 @@
         "name": "Id",
         "type": "id"
       },
-      "collection": {
+      "name": {
         "name": "Name",
         "type": "text"
       }, 
