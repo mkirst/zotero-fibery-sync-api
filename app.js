@@ -208,13 +208,10 @@ app.post(`/api/v1/synchronizer/data`, wrap(async (req, res) => {
             data.name = bibKey + ' (' + item.key + ')';
 
             // Find collections
-            if ("collections" in data) {
+            if (("collections" in data) && data.collections.length > 0) {
                 for (c of data.collections) {
                     console.log("Collection " + c);
-                    if (!c.isEmpty())
-                    {
-                        data.collectionId.push(uuid(JSON.stringify(c)));
-                    }
+                    data.collectionId.push(uuid(JSON.stringify(c)));
                 }        
             }
 
